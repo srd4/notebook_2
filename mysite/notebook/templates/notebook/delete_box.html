@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>My test page</title>
+  </head>
+  <body>
+    <h1>Delete {{box}}</h2>
+
+    <p>Are you sure you want to delete {{box}}?</p>
+
+    <form action="" method='POST'>
+        {% csrf_token %}
+        <input type="submit" value="delete">
+        <input type="submit" onclick="window.location='{% url 'notebook:boxes' %}' ; return false;" value="cancel">
+    </form>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>My test page</title>
+  </head>
+  <body>
+    <h2>Add new idea. {{ box_id }}</h2>
+    <form action="" method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" onclick="window.location='{% url 'notebook:box_detail' box_id %} ' ; return false;" value="cancel">
+        <input type="submit" value="+">
+    </form>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>My test page</title>
+  </head>
+  <body>
+    <h1>{{box_name}}</h1>
+    <form action="{% url 'notebook:idea_add' box_id %}" method="get">
+        <input type="submit" value="+">
+    </form>
+
+    {% if ideas_list %}
+	<ul>
+    	{% for idea in ideas_list %}
+    		<li>
+    		    (
+    		    <a href="{% url 'notebook:idea_edit' idea.id %}">edit</a>
+    		    |
+    		    <a href="{% url 'notebook:idea_delete' idea.id %}">delete</a>
+    		    ) {{idea.idea_text}}
+    		</li>
+    	{% endfor %}
+    </ul>
+    {% else %}
+		<p>This box is empty.</p>
+    {% endif %}
+
+  </body>
+</html>

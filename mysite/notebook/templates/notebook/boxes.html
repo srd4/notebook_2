@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>My test page</title>
+  </head>
+  <body>
+    <h1>Your boxes.</h1>
+    <form action="{% url 'notebook:add_box' %}" method='get'>
+    <input type='submit' value='+'>
+    </form>
+
+    {% if boxes_list %}
+	<ul>
+    	{% for box in boxes_list %}
+    		<li>
+    		    <a href="{% url 'notebook:box_detail' box.id %}">
+    		        {{box.box_name}}.
+    		    </a>
+    		    (
+    		    <a href= "{% url 'notebook:box_edit' box.id %}">edit</a>
+    		    |
+    		    <a href= "{% url 'notebook:box_delete' box.id %}">delete</a>
+    		    )
+    		</li>
+    	{% endfor %}
+    </ul>
+    {% else %}
+		<p>No boxes are available.</p>
+    {% endif %}
+
+
+  </body>
+</html>

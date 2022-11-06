@@ -11,7 +11,7 @@
         {{ form.as_table }}
         </table>
         <input type="submit" value="save">
-        <input type="submit" onclick="window.location='{% url 'notebook:boxes' %}' ; return false;" value="cancel">
+        <input type="submit" onclick="window.location='{% url 'notebook:box_detail' box.id %}' ; return false;" value="cancel">
     </form>
   </body>
 </html>

@@ -7,7 +7,7 @@
   <body>
     <h1>Your boxes.</h1>
     <form action="{% url 'notebook:add_box' %}" method='get'>
-    <input type='submit' value='+'>
+    <input type='submit' value='new box'>
     </form>
 
     {% if boxes_list %}
@@ -15,13 +15,11 @@
     	{% for box in boxes_list %}
     		<li>
     		    <a href="{% url 'notebook:box_detail' box.id %}">
-    		        {{box.box_name}}.
+    		        {{box.name}}
     		    </a>
-    		    (
-    		    <a href= "{% url 'notebook:box_edit' box.id %}">edit</a>
+    		    (<a href= "{% url 'notebook:box_edit' box.id %}">edit</a>
     		    |
-    		    <a href= "{% url 'notebook:box_delete' box.id %}">delete</a>
-    		    )
+    		    <a href= "{% url 'notebook:box_delete' box.id %}">delete</a>)
     		</li>
     	{% endfor %}
     </ul>

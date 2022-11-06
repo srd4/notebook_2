@@ -5,14 +5,14 @@
     <title>My test page</title>
   </head>
   <body>
-    <h1>Delete idea</h2>
+    <h1>Delete idea from {{box.name}}</h2>
     <p>{{idea}}</p>
     <p>Are you sure you want to delete it?</p>
 
     <form action="" method='POST'>
         {% csrf_token %}
         <input type="submit" value="delete">
-        <input type="submit" onclick="window.location='{% url 'notebook:box_detail' box_id %} ' ; return false;" value="cancel">
+        <input type="submit" onclick="window.location='{% url 'notebook:box_detail' box.id %} ' ; return false;" value="cancel">
     </form>
   </body>
 </html>

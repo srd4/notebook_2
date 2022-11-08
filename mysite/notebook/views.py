@@ -4,48 +4,55 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Box, Idea
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, render
-from django.db.models import Q
 
-class boxesView(generic.ListView):
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+LoginRequiredMixin.login_url = reverse_lazy("notebook:login")
+
+class boxesView(LoginRequiredMixin, generic.ListView):
+    login_url = reverse_lazy("notebook:login")
+    redirect_field_name = "redirect_to"
     model = Box
     template_name = 'notebook/boxes.html'
     context_object_name = 'boxes_list'
 
     def get_queryset(self):
-        """Return all boxes."""
-        return Box.objects.all()
+        #here boxes are not retrieved to be seen.
+        t = super(boxesView, self).get_queryset()
+        return t.filter(owner=self.request.user)
 
 
-class boxDetailView(generic.ListView):
+class boxDetailView(LoginRequiredMixin, generic.ListView):
     template_name = 'notebook/box_detail.html'
 
     def get_queryset(self):
         pk = self.kwargs['pk']
-        ideas_list = Idea.objects.filter(box_id=pk)
+        ideas_list = Idea.objects.filter(box_id=pk, owner=self.request.user)
 
         if self.request.GET.get('done') == "on":
             ideas_list = ideas_list.filter(done=True)
         elif self.request.GET.get('actionable') == "on":
             ideas_list = ideas_list.filter(actionable=True)
+        else:
+            ideas_list = ideas_list.filter(actionable=False)
 
         return ideas_list
 
     def get(self, request, pk):
-        """Return all ideas."""
-        bx = Box.objects.get(pk=pk)
+        #boxes don't exist for users that don't own them.
+        bx = Box.objects.get(pk=pk, owner=self.request.user)
+
         ctx = {
         "idea_list": self.get_queryset(),
         "box": bx,
-        'done': self.request.GET.get('done'),
-        'actionable': self.request.GET.get('actionable'),
-        'non-actionable': self.request.GET.get('non-actionable'),
         }
+
         return render(request, self.template_name, ctx)
 
 
-class addBoxView(CreateView):
+class addBoxView(LoginRequiredMixin, CreateView):
     model = Box
-    fields = '__all__'
+    fields = ['name']
     template_name = 'notebook/new_box.html'
 
     def get_success_url(self):
@@ -53,36 +60,55 @@ class addBoxView(CreateView):
         pk = self.model.objects.last().id
         return reverse_lazy('notebook:box_detail', kwargs={"pk":pk})
 
+    def form_valid(self, form):
+        object = form.save(commit=False)
+        object.owner = self.request.user
+        object.save()
+        print(object.owner)
+        return super(addBoxView, self).form_valid(form)
 
-class editBoxView(UpdateView):
+
+class editBoxView(LoginRequiredMixin, UpdateView):
     model = Box
-    fields = '__all__'
+    fields = ['name']
     template_name = 'notebook/edit_box.html'
     success_url = reverse_lazy('notebook:boxes')
 
+    def get_queryset(self):
+        qs = super(editBoxView, self).get_queryset()
+        return qs.filter(owner=self.request.user)
 
-class deleteBoxView(DeleteView):
+    def form_valid(self, form):
+        object = form.save(commit=False)
+        object.owner = self.request.user
+        object.save()
+        print(object.owner)
+        return super(editBoxView, self).form_valid(form)
+
+
+class deleteBoxView(LoginRequiredMixin, DeleteView):
     model = Box
-    fields = '__all__'
+    fields = ['name']
     template_name = 'notebook/delete_box.html'
     success_url = reverse_lazy('notebook:boxes')
-
-
-#views for ideas.
-class ideasView(generic.ListView):
-    model = Idea
-    template_name = 'notebook/ideas.html'
-    context_object_name = 'ideas_list'
-
+    
     def get_queryset(self):
-        """Return all ideas."""
-        return Idea.objects.all()
+        qs = super(deleteBoxView, self).get_queryset()
+        return qs.filter(owner=self.request.user)
 
 
-class addIdeaView(CreateView):
+
+class addIdeaView(LoginRequiredMixin, CreateView):
     model = Idea
-    fields = '__all__'
+    fields = ["done", "box", "text", "actionable"]
     template_name = 'notebook/new_idea.html'
+
+    def get_form(self, form_class=None):
+        print("this function is called")
+        form = super(addIdeaView, self).get_form()
+        form.fields["box"].queryset = Box.objects.filter(owner=self.request.user)
+        print("fuck", form.fields["box"])
+        return form
 
     def get_success_url(self):
         return reverse_lazy('notebook:box_detail', kwargs={'pk': self.kwargs['pk']})
@@ -94,12 +120,26 @@ class addIdeaView(CreateView):
 
     def get_initial(self):
         return {'box': self.kwargs['pk']}
+    
+    def form_valid(self, form):
+        object = form.save(commit=False)
+        object.owner = self.request.user
+        object.save()
+        print(object.owner)
+        return super(addIdeaView, self).form_valid(form)
 
 
-class editIdeaView(UpdateView):
+class editIdeaView(LoginRequiredMixin, UpdateView):
     model = Idea
-    fields = '__all__'
+    fields = ["done", "box", "text", "actionable"]
     template_name = 'notebook/edit_idea.html'
+
+    def get_form(self, form_class=None):
+        print("this function is called")
+        form = super(editIdeaView, self).get_form()
+        form.fields["box"].queryset = Box.objects.filter(owner=self.request.user)
+        print("fuck", form.fields["box"])
+        return form
 
     def get_success_url(self):
         i = Idea.objects.filter(id=self.kwargs['pk'])[0]
@@ -112,11 +152,14 @@ class editIdeaView(UpdateView):
         context['idea'] = i
         return context
 
+    def get_queryset(self):
+        qs = super(editIdeaView, self).get_queryset()
+        return qs.filter(owner=self.request.user)
 
 
-class deleteIdeaView(DeleteView):
+class deleteIdeaView(LoginRequiredMixin, DeleteView):
     model = Idea
-    fields = '__all__'
+    fields = ["done", "box", "text", "actionable"]
     template_name = 'notebook/delete_idea.html'
 
     def get_success_url(self):
@@ -130,4 +173,6 @@ class deleteIdeaView(DeleteView):
         context['idea'] = i
         return context
 
-
+    def get_queryset(self):
+        qs = super(deleteIdeaView, self).get_queryset()
+        return qs.filter(owner=self.request.user)

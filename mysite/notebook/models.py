@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 # there are boxes. like the inbox, where everything is added without filter. the actionable, where items that represent actions to-do are stored.
 # and non-actionable, where the opposite kind of items are stored (ideas). then all projects are also boxes.
@@ -9,6 +10,9 @@ from django.db import models
 
 class Box(models.Model):
     name = models.CharField(max_length=128)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -16,9 +20,13 @@ class Box(models.Model):
 
 class Idea(models.Model):
     done = models.BooleanField(default=False)
-    box = models.ForeignKey(Box, null=True, on_delete=models.SET_DEFAULT, default=1) #default is 1, or the inbox.
     text = models.TextField(max_length=280)
     actionable = models.BooleanField(default=False)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    
+    box = models.ForeignKey(Box, null=True, on_delete=models.SET_DEFAULT, default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.text

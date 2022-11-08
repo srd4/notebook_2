@@ -15,8 +15,5 @@ urlpatterns = [
         name='site_path'
     ),
     path('admin/', admin.site.urls),
-    path('polls/', include('polls.urls')),
-    path('notebook/', include('notebook.urls')),
-    path('', TemplateView.as_view(template_name='home/main.html')),
-    path('hello/', include('hello.urls')),
+    path('', include('notebook.urls')),
 ]

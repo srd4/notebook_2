@@ -5,6 +5,15 @@
     <title>My test page</title>
   </head>
   <body>
+
+    {% if request.user.is_authenticated %}
+    <p>{{ request.user }}</p>
+    <a href="{% url 'notebook:logout' %}">Logout</a>
+
+    {% else %}
+    <a href="{% url 'notebook:login' %}">Login</a>
+    {% endif %}
+    <hr>
     <h1>Your boxes.</h1>
     <form action="{% url 'notebook:add_box' %}" method='get'>
     <input type='submit' value='new box'>

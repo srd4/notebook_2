@@ -41,9 +41,9 @@
             <a href="{% url 'notebook:idea_delete' idea.id %}">delete</a>)
 
             {% if idea.done %}
-              <s>{{idea.text}}</s>
+              <s>{{idea}}</s>
             {% else %}
-              {{idea.text}}
+              {{idea}}
             {% endif %}
 
           </li>

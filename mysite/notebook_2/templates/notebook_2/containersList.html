@@ -1,0 +1,61 @@
+<style>
+    .circle {
+        display:inline-block;
+        background-color: black;
+        color: #444;;
+        width: 12px;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        height: 12px;
+        border-radius: 50%;
+    }
+
+    .child_group {
+        padding-left: 4%;
+
+    }
+
+</style>
+
+{% for container in container_list %}
+    <div id="container-{{container.id}}">
+        {% if container.getChildren|length %}
+            {% if container.collapsed %}
+            <i class="fa-solid fa-caret-right" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-target="#container-{{container.id}}" hx-post="{% url 'notebook_2:container_collapse' container.id%}" hx-trigger="click" style="cursor: pointer;"></i>
+            {% else %}
+            <i class="fa-solid fa-caret-down" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-target="#container-{{container.id}}" hx-post="{% url 'notebook_2:container_collapse' container.id%}" hx-trigger="click" style="cursor: pointer;"></i>
+            {% endif %}
+        {% else %}
+            <i class="circle"></i>
+        {% endif %}
+
+        <div style="display: inline-block;">
+            <a href="{% url 'notebook_2:container_detail' container.id %}">{{container}} </a>
+            {% if container.getChildren %}    
+                <span style="color:gray"> {{container.countTreeItems }} ({{container.getItems|length }})</span>
+            {% else %}
+                <span style="color:gray">{{container.getItems|length }}</span>
+            {% endif %}
+        </div>
+
+        <div style="float: right;">
+            <a class="fa-solid fa-pen" href= "{% url 'notebook_2:container_update' container.id %}"></a>
+            <a style="color: red;" class="fa-solid fa-x" href= "{% url 'notebook_2:container_delete' container.id %}"></a>
+        </div>
+        
+
+        {% if container.getChildren|length %}
+            {% if container.collapsed %}
+                <div style="display: none;" id="{{container.id}}-{{ forloop.counter }}" class="child_group">
+            {% else %}
+                <div id="{{container.id}}-{{ forloop.counter }}" class="child_group">
+            {% endif %}
+                    {% include "notebook_2/containersList.html" with container_list=container.getChildren %}
+                </div>
+        {% endif %}
+
+    </div>
+
+{% endfor %}

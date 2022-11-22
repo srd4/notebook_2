@@ -15,5 +15,5 @@ urlpatterns = [
         name='site_path'
     ),
     path('admin/', admin.site.urls),
-    path('', include('notebook.urls')),
+    path('', include('notebook_2.urls')),
 ]

@@ -1,0 +1,101 @@
+{% extends 'notebook_2/main.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{ container }}</title>
+  </head>
+
+  <style>
+    .bar {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #e4433a;
+            top: 0;
+            width: 550px;
+    }
+
+
+    .bar a {
+            float: left;
+            width: 50%;
+            display: inline-block;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+    }
+
+    .item-list {
+      padding-top: 10px;
+    }
+
+    .active-button {
+            background-color: #c82922;
+            color: white;
+    }
+
+    .item_div i {
+      cursor: pointer;
+    }
+
+    i {
+      cursor: pointer;
+    }
+
+    button {
+      border: none;
+      cursor:pointer;
+    }
+
+
+  </style>
+  <body>
+
+    {% include 'notebook_2/navigation_bar.html' %}
+    
+    <div>
+      <h1 id="container-name">{{ container }}</h1>
+      <p>{{ container.description }}</p>
+      <a class="fa-solid fa-pen" href= "{% url 'notebook_2:container_update' container.id %}"></a>
+      <a style="color: red;" class="fa-solid fa-x" href= "{% url 'notebook_2:container_delete' container.id %}"></a>
+    </div>
+
+    <div>
+      <hr style="width: 100%;">
+    </div>
+    
+    <div hx-trigger="click" hx-target="#item_list" hx-get="{% url 'notebook_2:container_changeTab' pk=container.id %}?toggle=True" class="bar">
+      {% if container.seeingActionables %}
+      <a class="active-button" id="actionable" onclick="toggleActionable();">actionable</a>
+      <a id="non-actionable" onclick="toggleActionable();">non-actionable</a>
+      {% else %}
+      <a id="actionable" onclick="toggleActionable();">actionable</a>
+      <a class="active-button" id="non-actionable" onclick="toggleActionable();">non-actionable</a>
+      {% endif %}
+    </div>
+    
+    <div hx-trigger="load" id="item_list" hx-get="{% url 'notebook_2:container_changeTab' pk=container.id %}">
+
+    </div>
+
+    <script>
+      function toggleActionable() {
+        var x = document.getElementById("actionable");
+        if (x.className === "") {
+          x.className = "active-button";
+          document.getElementById("non-actionable").className = "";
+        } else {
+          x.className = "";
+          document.getElementById("non-actionable").className = "active-button";
+        }
+
+      }
+</script>
+      
+
+  </body>
+</html>
+{% endblock content %}

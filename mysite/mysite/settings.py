@@ -37,6 +37,7 @@ ALLOWED_HOSTS = [ '*' ]
 
 INSTALLED_APPS = [
     'notebook.apps.NotebookConfig',
+    'notebook_2.apps.Notebook2Config',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

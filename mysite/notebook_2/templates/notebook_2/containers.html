@@ -1,0 +1,43 @@
+{% extends 'notebook_2/main.html'%}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>notebook_2</title>
+  </head>
+  <style>
+      #archive-button {
+        background: none;
+        cursor: pointer;
+        border: none;
+    }
+  </style>
+  <body>
+
+    {% include 'notebook_2/navigation_bar.html' %}
+
+    <h1>Your Containers.</h1>
+    <div class="containers-options">
+      <a style="color: #44970C;" class="fa-solid fa-plus" href="{% url 'notebook_2:container_create' %}"></a>
+    </div>
+
+    <hr style="position:relative;">
+    
+    {% if container_list %}
+      <div>
+        {% include 'notebook_2/containersList.html'%}
+      </div>
+    {% else %}
+		<p>No containers available.</p>
+    {% endif %}
+
+    
+
+
+  </body>
+
+  <script>
+  </script>
+</html>
+{% endblock content %}

@@ -1,0 +1,29 @@
+<style>
+    a {
+        cursor: pointer;
+    }
+</style>
+
+<div id="item-{{item.id}}" class="item">
+        {% csrf_token %}
+        {% if item.actionable %}
+            {% if item.done %}
+                <button hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-post="{% url 'notebook_2:item_done' item.id %}" hx-trigger="click" hx-target="#item-{{item.id}}" class="fa-regular fa-circle-check" style="color: rgb(68, 151, 12)"></button>
+                <s id="crossed-out-{{item.id}}">{{ item }}</s>
+            {% else %}
+                <button hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-post="{% url 'notebook_2:item_done' item.id %}" hx-trigger="click" hx-target="#item-{{item.id}}" class="fa-regular fa-circle"></button>
+                {{ item }}
+            {% endif %}
+        {% else %}
+        <a class="fa-solid fa-lightbulb" href="{% url 'notebook_2:item_create' container.id|default:1 %}?pk={{item.id}}&actionable={{container.seeingActionables}}"></a>
+            {{ item }}
+        {% endif %}
+
+    {% if item.actionable %}
+        <a class="fa-solid fa-lightbulb" href="{% url 'notebook_2:item_create' container.id|default:1 %}?pk={{item.id}}&actionable={{container.seeingActionables}}"></a>
+    {% endif %}
+
+    <a class="fa-solid fa-pen" onclick="window.location='{% url 'notebook_2:item_update' item.id %}?next={{container.id}}' ; return false;"></a>
+    <a style="color: red;" class="fa-solid fa-x" onclick="window.location='{% url 'notebook_2:item_delete' item.id %}' ; return false;"></a>
+</div>
+

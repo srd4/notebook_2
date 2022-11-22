@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404, render
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+#correct link everywhere.
 LoginRequiredMixin.login_url = reverse_lazy("notebook:login")
 
 class boxesView(LoginRequiredMixin, generic.ListView):
@@ -17,7 +18,7 @@ class boxesView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'boxes_list'
 
     def get_queryset(self):
-        #here boxes are not retrieved to be seen.
+        #here boxes user doesn't own are not retrieved to be seen.
         t = super(boxesView, self).get_queryset()
         return t.filter(owner=self.request.user)
 
@@ -36,7 +37,7 @@ class boxDetailView(LoginRequiredMixin, generic.ListView):
         else:
             ideas_list = ideas_list.filter(actionable=False)
 
-        return ideas_list
+        return ideas_list.order_by('-updated_at', '-created_at')
 
     def get(self, request, pk):
         #boxes don't exist for users that don't own them.

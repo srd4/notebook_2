@@ -1,0 +1,43 @@
+{% extends 'notebook_2/main.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Page Title</title>
+</head>
+
+<style>
+    label {
+        display: block;
+    }
+
+    #login{
+        margin: auto;
+        width: 50%;
+    }
+
+    #bton {
+        width: 25%;
+        margin-top: 10px;
+        
+    }
+
+
+</style>
+<body>
+    <h1 style="width: 50%; margin: auto;">Login to Notebook 2.0</h1>
+    <div id="login">
+        <form method="POST">
+                {% csrf_token %}
+                {{form.as_div}}
+            <input id="bton" type="submit" value="Login">
+        </form>
+
+        <p>New to Notebook 2.0? <a style="text-decoration:underline;" href="{% url 'notebook_2:register' %}">Register</a></p>
+        
+    </div>
+    
+</body>
+</html>
+{% endblock content %}

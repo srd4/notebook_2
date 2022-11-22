@@ -1,0 +1,146 @@
+{% extends 'notebook_2/main.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Page Title</title>
+</head>
+<style>
+    .bar {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #e4433a;
+            top: 0;
+            width: 550px;
+    }
+
+
+    .bar a {
+            float: left;
+            width: 50%;
+            display: block;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+    }
+
+    .item_list {
+      padding-top: 10px;
+    }
+
+    .active-button {
+            background-color: #c82922;
+            color: white;
+    }
+
+    .item_div i {
+      cursor: pointer;
+    }
+
+    .circle {
+        display:inline-block;
+        background-color: black;
+        color: #444;;
+        width: 12px;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        height: 12px;
+        border-radius: 50%;
+    }
+
+    button {
+      border: none;
+      cursor:pointer;
+      background: none;
+    }
+
+
+
+
+</style>
+<body>
+    {% include 'notebook_2/navigation_bar.html' %}
+    
+    <h1>Container results</h1>
+
+    {% if container_list %}
+        {% for container in container_list %}
+        <div>
+            <i class="circle"></i>
+            <a href="{% url 'notebook_2:container_detail' container.id %}">{{container}} </a>
+        </div>
+        {% endfor %}
+    {% else %}
+        No container results.
+    {% endif %}
+        
+    <hr>
+
+    <h1>Item results</h1>
+
+    <div id="not-archived">
+        <div class="bar">
+            <a class="active-button" id="actionable" onclick="toggleActionable();">actionable</a>
+            <a id="non-actionable" onclick="toggleActionable();">non-actionable</a>
+        </div>
+
+        <div class="item_list" id="act">
+            {% if item_list %}
+        <div>
+            {% for item in item_list %}
+                {% if item.actionable %}
+                    {% include 'notebook_2/item.html' %}
+                {% endif %}
+            {% endfor %}
+            </div>
+            {% else %}
+            <p>No item results.</p>
+            {% endif %}
+        </div>
+
+        <div class="item_list" style="display: none;" id="non_act" >
+            {% if item_list %}
+            <div class="item_div">
+                {% for item in item_list %}
+                    {% if not item.actionable %}
+                        {% include 'notebook_2/item.html' %}
+                    {% endif %}
+                {% endfor %}
+                </div>
+            {% else %}
+            <p>No item results.</p>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <script>
+        function toggleActionable() {
+          var x = document.getElementById("act");
+          var y = document.getElementById("non_act");
+          if (x.style.display === "none") {
+            x.style.display = "block";
+            y.style.display = "none";
+            document.getElementById("actionable").className = "active-button"
+            document.getElementById("non-actionable").className = ""
+          } else {
+            x.style.display = "none";
+            y.style.display = "block";
+            document.getElementById("non-actionable").className = "active-button"
+            document.getElementById("actionable").className = ""
+          }
+    
+        }
+    </script>
+</body>
+
+
+
+</html>
+
+{% endblock content %}

@@ -1,0 +1,11 @@
+<div hx-swap-oob="true" id="item_list">
+{% if item_list %}
+        {% for item in item_list %}
+            {% if item.actionable == container.seeingActionables %}
+                {% include 'notebook_2/item.html' %}
+            {% endif %}
+        {% endfor %}
+{% endif %}
+</div>
+
+<a hx-swap-oob="true" id="new-item" href="{% url 'notebook_2:item_create' container.id|default:1 %}?actionable={{container.seeingActionables}}">&#43;</a>

@@ -29,7 +29,7 @@ class Container(models.Model):
                 i.parentContainer = self.parentContainer
             else:
             #or on inbox if parentContainer = None.
-                i.parentContainer = Container.objects.get(pk=1)
+                i.parentContainer = Container.objects.get(pk=1, owner=self.owner)
             i.save()
         return super().delete(*args, **kwargs)
 
@@ -48,10 +48,10 @@ class Container(models.Model):
         self.save()
 
     def getChildren(self):
-        return Container.objects.filter(parentContainer=self.pk).order_by('-timesOpened')
+        return Container.objects.filter(parentContainer=self.pk, owner=self.owner).order_by('-timesOpened')
     
     def getItems(self):
-        return Item.objects.filter(parentContainer=self.pk)
+        return Item.objects.filter(parentContainer=self.pk, owner=self.owner)
 
     def toggleCollapsed(self):
         if self.collapsed == True:
@@ -91,22 +91,22 @@ class Item(models.Model):
         return super().save(*args, kwargs)
 
     def createItemStatementVersion(self):
-        old_exists = Item.objects.filter(pk=self.pk).exists()
+        old_exists = Item.objects.filter(pk=self.pk, owner=self.owner).exists()
         if old_exists:
             old = Item.objects.get(pk=self.pk)
-            ItemStatementVersion.objects.get_or_create(statement=old.statement, defaults={'parentItem' :self, 'created_at': old.updated_at})
+            ItemStatementVersion.objects.get_or_create(statement=old.statement, defaults={'parentItem' :self, 'created_at': old.updated_at, 'owner':self.owner})
 
     def __str__(self):
         return self.statement
 
     def get_parentContainer(self):
-        return Container.objects.get(pk=self.parentContainer.pk)
+        return Container.objects.get(pk=self.parentContainer.pk, owner=self.owner)
     
     def get_parentItem(self):
         return Item.objects.get(pk=self.parentItem)
 
     def get_versions(self):
-        return ItemStatementVersion.objects.filter(parentItem_id=self.pk)
+        return ItemStatementVersion.objects.filter(parentItem_id=self.pk, owner=self.owner)
     
     def toggleDone(self):
         if self.done:

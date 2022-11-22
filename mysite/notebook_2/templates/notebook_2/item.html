@@ -1,3 +1,9 @@
+<style>
+    a {
+        cursor: pointer;
+    }
+</style>
+
 <div id="item-{{item.id}}" class="item">
         {% csrf_token %}
         {% if item.actionable %}

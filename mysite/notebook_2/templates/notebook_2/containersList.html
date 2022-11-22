@@ -1,3 +1,24 @@
+<style>
+    .circle {
+        display:inline-block;
+        background-color: black;
+        color: #444;;
+        width: 12px;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        height: 12px;
+        border-radius: 50%;
+    }
+
+    .child_group {
+        padding-left: 4%;
+
+    }
+
+</style>
+
 {% for container in container_list %}
     <div id="container-{{container.id}}">
         {% if container.getChildren|length %}

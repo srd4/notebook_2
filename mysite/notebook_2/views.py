@@ -33,11 +33,14 @@ def containerChangeTab(request, pk):
         c.toggleTab()
     return render(request, 'notebook_2/itemList.html', {'item_list': c.getItems().order_by('-updated_at'), 'container': c})
 
+
 class loginView(LoginView):
     template_name = "notebook_2/login.html"
 
+
 class logoutView(LogoutView):
     next_page = reverse_lazy('notebook_2:login')
+
 
 class registerView(FormView):
     template_name = "notebook_2/register.html"
@@ -51,7 +54,6 @@ class registerView(FormView):
         if User is not None:
             login(self.request, User)
         return super(registerView, self).form_valid(form)
-
 
 class searchView(LoginRequiredMixin, generic.TemplateView):
     template_name = "notebook_2/searchView.html"
@@ -68,7 +70,6 @@ class searchView(LoginRequiredMixin, generic.TemplateView):
             return {"container_list":{}, "item_list":{}}
 
         return {"container_list":cqs, "item_list":iqs}
-
 
 
 class containersView(LoginRequiredMixin, generic.TemplateView):
@@ -108,8 +109,6 @@ class containerDetailView(LoginRequiredMixin, generic.ListView):
         return render(self.request, self.template_name, self.get_context_data())
 
 
-
-
 class containerCreateView(LoginRequiredMixin, CreateView):
     model = Container
     template_name = 'notebook_2/containerCreate.html'
@@ -132,7 +131,6 @@ class containerCreateView(LoginRequiredMixin, CreateView):
         return super(containerCreateView, self).form_valid(form)
 
 
-
 class containerUpdateView(LoginRequiredMixin, UpdateView):
     model = Container
     template_name = 'notebook_2/containerUpdate.html'
@@ -145,7 +143,6 @@ class containerUpdateView(LoginRequiredMixin, UpdateView):
         form.fields["parentContainer"].required = False
         form.fields["parentContainer"].queryset = Container.objects.filter(owner=self.request.user).exclude(pk=self.kwargs['pk'])
         return form
-
 
 
 class containerDeleteView(LoginRequiredMixin, DeleteView):
@@ -214,7 +211,6 @@ class itemUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         success_url = reverse_lazy("notebook_2:container_detail", kwargs={'pk': self.request.GET.get('next')})
         return success_url
-
 
 
 class itemDeleteView(LoginRequiredMixin, DeleteView):

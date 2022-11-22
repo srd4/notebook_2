@@ -116,19 +116,20 @@ class containerCreateView(LoginRequiredMixin, CreateView):
     fields = ["name","description", "parentContainer"]
 
     def get_success_url(self):
-        pk = Container.objects.filter(owner=self.request.user).latest().id
+        pk = Container.objects.filter(owner=self.request.user).last().id
         return reverse_lazy("notebook_2:containers")
 
     def get_form(self):
         form = super(containerCreateView, self).get_form()
         form.fields["parentContainer"].required = False
+        form.fields["parentContainer"].queryset = Container.objects.filter(owner=self.request.user)
         return form
 
     def form_valid(self, form):
         c = form.save(commit=False)
         c.owner = self.request.user
         c.save()
-        return super(itemCreateView, self).form_valid(form)
+        return super(containerCreateView, self).form_valid(form)
 
 
 
@@ -142,6 +143,7 @@ class containerUpdateView(LoginRequiredMixin, UpdateView):
     def get_form(self):
         form = super(containerUpdateView, self).get_form()
         form.fields["parentContainer"].required = False
+        form.fields["parentContainer"].queryset = Container.objects.filter(owner=self.request.user)
         return form
 
 
@@ -176,6 +178,7 @@ class itemCreateView(LoginRequiredMixin, CreateView):
     def get_form(self):
         f = super(itemCreateView, self).get_form()
         f.fields['parentContainer'].initial = Container.objects.get(pk=self.kwargs['pk'], owner=self.request.user)
+        f.fields["parentContainer"].queryset = Container.objects.filter(owner=self.request.user)
         f.fields['parentItem'].required = False
         f.fields['parentItem'].initial = self.request.GET.get('pk')
         f.fields['parentItem'].widget = forms.HiddenInput()

@@ -11,7 +11,7 @@
     <div id="login">
         <form method="POST">
                 {% csrf_token %}
-                {{form.as_div}}
+                {{form.as_p}}
             <input id="bton" type="submit" value="Register">
         </form>
 

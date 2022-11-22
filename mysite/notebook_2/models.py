@@ -10,7 +10,7 @@ class Container(models.Model):
     parentContainer = models.ForeignKey('self', null=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE, default=1)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL, default=1)
     lastOpened = models.DateTimeField(auto_now=True)
     timesOpened = models.IntegerField(default=1)
     collapsed = models.BooleanField(default=True)
@@ -83,7 +83,7 @@ class Item(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
-    parentItem = models.ForeignKey('self', null=True, on_delete=models.SET_NULL)
+    parentItem = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
     completed_at = models.DateTimeField(null=True, default=None)
 
     def save(self, *args, **kwargs):

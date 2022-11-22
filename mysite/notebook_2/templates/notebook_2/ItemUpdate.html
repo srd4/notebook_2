@@ -1,12 +1,6 @@
 {% extends 'notebook_2/main.html' %}
 {% block content %}
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset='utf-8'>
-    <title>Idea update</title>
-</head>
-<body>
+<div>
     <h2>Update item</h2>
     <form action="" method="post">
         {% csrf_token %}
@@ -16,6 +10,5 @@
         <input type="submit" onclick="window.location='{% url 'notebook_2:container_detail' container.id %}' ; return false;" value="cancel">
         <input type="submit" value="save">
     </form>
-</body>
-</html>
+</div>
 {% endblock content %}

@@ -36,6 +36,7 @@ ALLOWED_HOSTS = [ '*' ]
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.staticfiles',
     'notebook.apps.NotebookConfig',
     'notebook_2.apps.Notebook2Config',
     'django.contrib.admin',
@@ -43,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    
 ]
 
 MIDDLEWARE = [

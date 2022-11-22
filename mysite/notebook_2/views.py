@@ -55,6 +55,11 @@ class registerView(FormView):
             login(self.request, User)
         return super(registerView, self).form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["view_title"] = "Registration"
+        return ctx
+
 class searchView(LoginRequiredMixin, generic.TemplateView):
     template_name = "notebook_2/searchView.html"
 
@@ -69,7 +74,7 @@ class searchView(LoginRequiredMixin, generic.TemplateView):
         else:
             return {"container_list":{}, "item_list":{}}
 
-        return {"container_list":cqs, "item_list":iqs}
+        return {"container_list":cqs, "item_list":iqs, "view_title": "Search"}
 
 
 class containersView(LoginRequiredMixin, generic.TemplateView):

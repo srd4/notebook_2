@@ -143,7 +143,7 @@ class containerUpdateView(LoginRequiredMixin, UpdateView):
     def get_form(self):
         form = super(containerUpdateView, self).get_form()
         form.fields["parentContainer"].required = False
-        form.fields["parentContainer"].queryset = Container.objects.filter(owner=self.request.user)
+        form.fields["parentContainer"].queryset = Container.objects.filter(owner=self.request.user).exclude(pk=self.kwargs['pk'])
         return form
 
 

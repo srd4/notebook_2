@@ -48,6 +48,7 @@ class logoutView(LogoutView):
 class registerView(FormView):
     form_class = UserCreationForm
     template_name = "notebook_2/register.html"
+    success_url = reverse_lazy('notebook_2:containers')
     redirect_authenticated_user = True
 
     def form_valid(self, form):

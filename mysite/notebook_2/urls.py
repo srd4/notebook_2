@@ -13,7 +13,7 @@ urlpatterns = [
     path('collapse/<int:pk>/', views.containerCollapse, name='container_collapse'),
     path('changeTab/<int:pk>/', views.containerChangeTab, name='container_changeTab'),
 
-    path('<int:pk>/new/item', views.itemCreateView.as_view(), name='item_create'),
+    path('new/item', views.itemCreateView.as_view(), name='item_create'),
     path('edit/item/<int:pk>/', views.itemUpdateView.as_view(), name='item_update'),
     path('delete/item/<int:pk>/', views.itemDeleteView.as_view(), name='item_delete'),
 

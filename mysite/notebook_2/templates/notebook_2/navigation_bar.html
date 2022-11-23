@@ -92,11 +92,11 @@
         <a id="home" href="{% url 'notebook_2:containers' %}">home</a>
 
         <form action="{% url 'notebook_2:search' %}" method="get" id="search-form">
-            <input id="search-bar" type="text" placeholder="search" name="q">
+            <input id="search-bar" type="text" placeholder="search" name="search_query">
         </form>
 
         <div id="right_info">
-            <a id="new-item" href="{% url 'notebook_2:item_create' container.id|default:1 %}?actionable={{container.seeingActionables}}">&#43;</a>
+            <a id="new-item" href="{% url 'notebook_2:item_create' %}?actionable={{container.seeingActionables}}&container_pk={{container.id}}">&#43;</a>
             <a id="log-out" href="{% url 'notebook_2:logout' %}"> logout </a>
         </div>
         <div style="color: white;">

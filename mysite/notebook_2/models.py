@@ -40,10 +40,12 @@ class Container(models.Model):
         return self.name
 
     def add_timesOpened(self):
+        """increases by one timesOpened field on model object, saves the model object."""
         self.timesOpened += 1
         self.save()
-    
+
     def add_lastOpened(self):
+        """updates lastOpened field on model object, saves the model object."""
         self.lastOpened = models.DateTimeField(auto_now=True)
         self.save()
 

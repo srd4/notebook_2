@@ -8,4 +8,4 @@
 {% endif %}
 </div>
 
-<a hx-swap-oob="true" id="new-item" href="{% url 'notebook_2:item_create' container.id|default:1 %}?actionable={{container.seeingActionables}}">&#43;</a>
+<a hx-swap-oob="true" id="new-item" href="{% url 'notebook_2:item_create' %}?actionable={{container.seeingActionables}}&container_pk={{container.id}}">&#43;</a>

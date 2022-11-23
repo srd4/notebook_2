@@ -66,6 +66,7 @@ class registerView(FormView):
         """redirects authenticated user to 'home'"""
         if self.request.user.is_authenticated:
             return redirect('notebook_2:containers')
+        return super(registerView, self).get(self)
 
 
 class searchView(LoginRequiredMixin, generic.TemplateView):

@@ -204,7 +204,7 @@ class itemCreateView(LoginRequiredMixin, CreateView):
         f.fields["parentContainer"].queryset = Container.objects.filter(owner=self.request.user)
 
         f.fields['parentItem'].required = False
-        f.fields['parentItem'].initial = self.request.GET.get('pk')
+        f.fields['parentItem'].initial = self.request.GET.get("item_inspiring")
         f.fields['parentItem'].widget = forms.HiddenInput()
 
         #prepopulate actionable field with what's on query.

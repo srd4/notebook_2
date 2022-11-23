@@ -15,15 +15,15 @@
                 {{ item }}
             {% endif %}
         {% else %}
-        <a class="fa-solid fa-lightbulb" href="{% url 'notebook_2:item_create' %}?pk={{item.id}}&actionable={{container.seeingActionables}}&container_pk={{container.id}}"></a>
+        <a class="fa-solid fa-lightbulb" href="{% url 'notebook_2:item_create' %}?item_inspiring={{item.id}}&actionable={{container.seeingActionables}}&container_pk={{item.parentContainer.id}}"></a>
             {{ item }}
         {% endif %}
 
     {% if item.actionable %}
-        <a class="fa-solid fa-lightbulb" href="{% url 'notebook_2:item_create' %}?pk={{item.id}}&actionable={{container.seeingActionables}}&container_pk={{container.id}}"></a>
+        <a class="fa-solid fa-lightbulb" href="{% url 'notebook_2:item_create' %}?item_inspiring={{item.id}}&actionable={{container.seeingActionables}}&container_pk={{item.parentContainer.id}}"></a>
     {% endif %}
 
-    <a class="fa-solid fa-pen" onclick="window.location='{% url 'notebook_2:item_update' item.id %}?next={{container.id}}' ; return false;"></a>
+    <a class="fa-solid fa-pen" onclick="window.location='{% url 'notebook_2:item_update' item.id %}?container_pk={{item.parentContainer.id}}' ; return false;"></a>
     <a style="color: red;" class="fa-solid fa-x" onclick="window.location='{% url 'notebook_2:item_delete' item.id %}' ; return false;"></a>
 </div>
 

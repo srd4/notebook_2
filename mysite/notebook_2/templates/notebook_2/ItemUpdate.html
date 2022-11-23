@@ -7,7 +7,7 @@
         <table>
             {{ form.as_p }}
         </table>
-        <input type="submit" onclick="window.location='{% url 'notebook_2:container_detail' container.id %}' ; return false;" value="cancel">
+        <input type="submit" onclick="window.location='{% url 'notebook_2:container_detail' item.parentContainer.id %}' ; return false;" value="cancel">
         <input type="submit" value="save">
     </form>
 </div>

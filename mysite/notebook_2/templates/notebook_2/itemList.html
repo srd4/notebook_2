@@ -7,5 +7,5 @@
         {% endfor %}
 {% endif %}
 </div>
-
-<a hx-swap-oob="true" id="new-item" href="{% url 'notebook_2:item_create' %}?actionable={{container.seeingActionables}}&container_pk={{container.id}}">&#43;</a>
+<!--this one replaces/updates nav bar button for creating a new idea-->
+<a hx-swap-oob="true" id="new-item" href="{% url 'notebook_2:item_create' %}?actionable={{container.seeingActionables}}&container_pk={{item.parentContainer.id}}">&#43;</a>

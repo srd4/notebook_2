@@ -1,17 +1,17 @@
 from django.db import models
 from django.conf import settings
 
-from django.utils import timezone
-
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 class Container(models.Model):
     name = models.CharField(max_length=128)
-    description = models.TextField(max_length=140)
+    description = models.TextField(max_length=200)
     parentContainer = models.ForeignKey('self', null=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    lastOpened = models.DateTimeField(default=timezone.now)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL, default=1)
+    lastOpened = models.DateTimeField(auto_now=True)
     timesOpened = models.IntegerField(default=1)
     collapsed = models.BooleanField(default=True)
     seeingActionables = models.BooleanField(default=True)
@@ -20,7 +20,6 @@ class Container(models.Model):
         #Children containers fall into parent container after their container is deleted.
         for i in self.getChildren():
             i.parentContainer = self.parentContainer
-            #children's name is changed to show the relationship that existed.
             i.name = self.name + " : " + i.name
             i.save()
 
@@ -28,29 +27,32 @@ class Container(models.Model):
         for i in self.getItems():
             if self.parentContainer != None:
                 i.parentContainer = self.parentContainer
-            elif Container.objects.filter(owner=self.owner).exists():
-            #or on first user's container if parentContainer = None -Null if such container doesn't exist as it is the Item model's default.
-                i.parentContainer = Container.objects.filter(owner=self.owner).first()
+            else:
+            #or on inbox if parentContainer = None.
+                i.parentContainer = Container.objects.get(pk=1, owner=self.owner)
             i.save()
         return super().delete(*args, **kwargs)
+
+    def get_parentContainer(self):
+        return self.parentContainer
 
     def __str__(self):
         return self.name
 
     def add_timesOpened(self):
+        """increases by one timesOpened field on model object, saves the model object."""
         self.timesOpened += 1
         self.save()
 
     def add_lastOpened(self):
-        self.lastOpened = timezone.now()
+        """updates lastOpened field on model object, saves the model object."""
+        self.lastOpened = models.DateTimeField(auto_now=True)
         self.save()
 
     def getChildren(self):
-        """sorted by used on templates containersView's template"""
         return Container.objects.filter(parentContainer=self.pk, owner=self.owner).order_by('-timesOpened')
-
+    
     def getItems(self):
-        """return children items."""
         return Item.objects.filter(parentContainer=self.pk, owner=self.owner)
 
     def toggleCollapsed(self):
@@ -59,7 +61,7 @@ class Container(models.Model):
         else:
             self.collapsed = True
         self.save()
-
+    
     def toggleTab(self):
         if self.seeingActionables == True:
             self.seeingActionables = False
@@ -68,11 +70,11 @@ class Container(models.Model):
         self.save()
 
     def countTreeItems(self):
-        """recursively count the items on itself and all subcontainers of it's subcontainers"""
         i = len(self.getItems())
         for child in self.getChildren():
             i += child.countTreeItems()
         return i
+
 
 
 class Item(models.Model):
@@ -82,69 +84,52 @@ class Item(models.Model):
     parentContainer = models.ForeignKey(Container, null=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    parentItem = models.ForeignKey('self', null=True, on_delete=models.CASCADE, default=None)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+    parentItem = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
     completed_at = models.DateTimeField(null=True, default=None)
 
-    def create_ItemStatementVersion(self):
-        current_version_statement_exists = Item.objects.filter(pk=self.pk, owner=self.owner).exists()
-        last_version_saved_exists = self.get_versions().exists()
-
-        if current_version_statement_exists and last_version_saved_exists:
-            current_version_statement = Item.objects.get(pk=self.pk, owner=self.owner).statement
-            last_version_saved_statement = self.get_versions().last()
-
-            if current_version_statement != last_version_saved_statement:
-                ItemStatementVersion.objects.get_or_create(statement=current_version_statement, defaults={"created_at" : self.updated_at, "parentItem": self,  "owner":self.owner})
-
     def save(self, *args, **kwargs):
-        """creates ItemStatementVersion objects before saving"""
-        self.create_ItemStatementVersion()
-        return super().save(*args, **kwargs)
+        self.createItemStatementVersion()
+        return super().save(*args, kwargs)
+
+    def createItemStatementVersion(self):
+        old_exists = Item.objects.filter(pk=self.pk, owner=self.owner).exists()
+        if old_exists:
+            old = Item.objects.get(pk=self.pk)
+            ItemStatementVersion.objects.get_or_create(statement=old.statement, defaults={'parentItem' :self, 'created_at': old.updated_at, 'owner':self.owner})
 
     def __str__(self):
         return self.statement
 
     def get_parentContainer(self):
-        """returns parentContainer object as currently instanciated from db"""
-        parentContainer_exists = Container.objects.filter(pk=self.parentContainer.pk, owner=self.owner).exists()
-
-        if parentContainer_exists:
-            return Container.objects.get(pk=self.parentContainer.pk, owner=self.owner)
-        return None
+        return Container.objects.get(pk=self.parentContainer.pk, owner=self.owner)
     
     def get_parentItem(self):
-        """returns parentItem object as currently instanciated from db"""
-        parentItem_exists = Item.objects.filter(pk=self.parentItem.pk, owner=self.owner)
-
-        if parentItem_exists:
-            return Item.objects.get(pk=self.parentItem.pk, owner=self.owner)
-        return None
+        return Item.objects.get(pk=self.parentItem)
 
     def get_versions(self):
-        versions_exist = ItemStatementVersion.objects.filter(parentItem=self, owner=self.owner).exists()
-        
-        if versions_exist:
-            return ItemStatementVersion.objects.filter(parentItem=self, owner=self.owner)
-        return None
+        return ItemStatementVersion.objects.filter(parentItem_id=self.pk, owner=self.owner)
     
     def toggleDone(self):
         if self.done:
             self.done = False
-            self.completed_at = None
+            self.save()
+            self.completed_at = self.updated_at
         else:
             self.done = True
-            self.completed_at = timezone.now()
+            self.save()
+            self.completed_at = self.updated_at
         self.save()
-        
-        return self.done
 
 
 class ItemStatementVersion(models.Model):
     statement = models.TextField(max_length=140)
     created_at = models.DateTimeField(auto_now_add=True)
     parentItem = models.ForeignKey(Item, null=False, on_delete=models.CASCADE)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    whatever = models.TextField(max_length=140)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
 
     def __str__(self):
         return self.statement
+
+

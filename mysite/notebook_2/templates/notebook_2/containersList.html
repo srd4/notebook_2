@@ -34,9 +34,9 @@
         <div style="display: inline-block;">
             <a href="{% url 'notebook_2:container_detail' container.id %}">{{container}} </a>
             {% if container.getChildren %}
-                <span style="color:gray"> {{ container.countTreeItems }} ({{ container.getItems|length }})</span>
+                <span style="color:gray"> {{container.countTreeItems }} ({{container.getItems|length }})</span>
             {% else %}
-                <span style="color:gray">{{ container.getItems|length }}</span>
+                <span style="color:gray">{{container.getItems|length }}</span>
             {% endif %}
         </div>
 

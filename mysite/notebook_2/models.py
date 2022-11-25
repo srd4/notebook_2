@@ -142,7 +142,7 @@ class Item(models.Model):
 class ItemStatementVersion(models.Model):
     statement = models.TextField(max_length=140)
     created_at = models.DateTimeField(auto_now_add=True)
-    parentItem = models.ForeignKey(Item, null=False, on_delete=models.CASCADE)
+    parentItem = models.ForeignKey(Item, null=True, on_delete=models.CASCADE)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):

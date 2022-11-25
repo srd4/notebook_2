@@ -206,6 +206,7 @@ class itemCreateView(LoginRequiredMixin, CreateView):
         f.fields['parentItem'].required = False
         f.fields['parentItem'].initial = self.request.GET.get("item_inspiring")
         f.fields['parentItem'].widget = forms.HiddenInput()
+        f.fields['parentItem'].queryset = Item.objects.filter(owner=self.request.user)
 
         #prepopulate actionable field with what's on query.
         f.fields['actionable'].initial = True if self.request.GET.get('actionable') == "True" else False
@@ -243,6 +244,7 @@ class itemUpdateView(LoginRequiredMixin, UpdateView):
         
         f.fields['parentItem'].required = False #hiddes parentitem input.
         f.fields['parentItem'].widget = forms.HiddenInput() #and sets it as not required (user has to delete and create a different instance to change it)
+        f.fields['parentItem'].queryset = Item.objects.filter(owner=self.request.user)
         return f
 
     

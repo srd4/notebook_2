@@ -151,7 +151,7 @@ class containerUpdateView(LoginRequiredMixin, UpdateView):
         form = super(containerUpdateView, self).get_form()
         a_field = form.fields["parentContainer"]
         a_field.required = False
-        #excludes itself from query set to select from -container shouldn't be subcontainer of itself. 
+        #excludes itself from query set to select from -a container shouldn't be a subcontainer of itself. 
         a_field.queryset = Container.objects.filter(owner=self.request.user).exclude(pk=self.kwargs['pk'])
         return form
 
@@ -168,6 +168,11 @@ class containerDeleteView(LoginRequiredMixin, DeleteView):
         #checking it is the user's.
         ctx['container'] = Container.objects.get(pk=self.kwargs['pk'], owner=self.request.user).name
         return ctx
+
+    def get_object(self):
+        """limits queryset to user owned containers only."""
+        queryset = Container.objects.filter(owner=self.request.user)
+        return super().get_object(queryset)
 
 
 class itemCreateView(LoginRequiredMixin, CreateView):
@@ -264,3 +269,7 @@ class itemDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         item = Item.objects.get(pk=self.kwargs['pk'], owner=self.request.user) #using pk on link. making sure it is owned by user.
         return reverse_lazy('notebook_2:container_detail', kwargs={'pk': item.parentContainer.id}) #an item is deleted from container, so there must be a container.
+
+    def get_object(self):
+        queryset = Item.objects.filter(owner=self.request.user)
+        return super().get_object(queryset)

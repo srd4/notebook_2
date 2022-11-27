@@ -16,7 +16,7 @@
             <button class="fa-regular fa-circle" hx-post="{% url 'notebook_2:item_done' item.id %}" hx-trigger="click" hx-target="#item-{{item.id}}" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'></button>
             {{ item }}
         {% endif %}
-            <!--actionables cna inspire ideas to-->
+            <!--actionables can inspire ideas to-->
         <a class="fa-solid fa-lightbulb" href="{% url 'notebook_2:item_create' %}?item_inspiring={{item.id}}&actionable={{container.seeingActionables}}&container_pk={{item.parentContainer.id}}"></a>
     {% else %}
         <!--item is non-actionable-->

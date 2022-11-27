@@ -49,18 +49,18 @@
 
     {% include 'notebook_2/navigation_bar.html' %}
     
-    <div>
-      <h1 id="container-name">{{ container }}</h1>
-      <p>{{ container.description }}</p>
+    <h1 id="container-name">{{ container }}</h1>
+    <p>{{ container.description }}</p>
+    <div style="float: right;">
       <a class="fa-solid fa-pen" href= "{% url 'notebook_2:container_update' container.id %}"></a>
-      <a style="color: red;" class="fa-solid fa-x" href= "{% url 'notebook_2:container_delete' container.id %}"></a>
-    </div>
-
-    <div>
-      <hr style="width: 100%;">
+      <a class="fa-solid fa-x" style="color: red;" href= "{% url 'notebook_2:container_delete' container.id %}"></a>
     </div>
     
-    <div hx-trigger="click" hx-target="#item_list" hx-get="{% url 'notebook_2:container_changeTab' pk=container.id %}?toggle=True" class="bar">
+    <br>
+    
+    <hr>
+    
+    <div class="bar" hx-trigger="click" hx-target="#item_list" hx-get="{% url 'notebook_2:container_changeTab' pk=container.id %}?toggle=True">
       {% if container.seeingActionables %}
       <a class="active-button" id="actionable" onclick="toggleActionable();">actionable</a>
       <a id="non-actionable" onclick="toggleActionable();">non-actionable</a>
@@ -71,6 +71,7 @@
     </div>
     
     <div hx-trigger="load" id="item_list" hx-get="{% url 'notebook_2:container_changeTab' pk=container.id %}">
+      <!--htmx fills this in when the page load requesting from the url 'container_changeTab' using template 'itemList.html'-->
     </div>
 
     <script>

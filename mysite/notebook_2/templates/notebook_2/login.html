@@ -15,15 +15,13 @@
         margin-top: 10px;
         
     }
-
-
 </style>
 <body>
     <h1 style="width: 50%; margin: auto;">Login to Notebook 2.0</h1>
     <div id="login">
         <form method="POST">
                 {% csrf_token %}
-                {{form.as_p}}
+                {{ form.as_p }}
             <input id="bton" type="submit" value="Login">
         </form>
 

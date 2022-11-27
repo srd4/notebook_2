@@ -87,28 +87,22 @@
     }
 
 </style>
-<body>
-    <div class="nav_bar">
-        <a id="home" href="{% url 'notebook_2:containers' %}">home</a>
 
-        <form action="{% url 'notebook_2:search' %}" method="get" id="search-form">
-            <input id="search-bar" type="text" placeholder="search" name="search_query">
-        </form>
+<div class="nav_bar">
+    <a id="home" href="{% url 'notebook_2:containers' %}">home</a>
 
-        <div id="right_info">
-            <a id="new-item" href="{% url 'notebook_2:item_create' %}?actionable={{container.seeingActionables}}&container_pk={{container.id}}">&#43;</a>
-            <a id="log-out" href="{% url 'notebook_2:logout' %}"> logout </a>
-        </div>
-        <div style="color: white;">
-            {{request.user|title}}
-        </div>
+    <form action="{% url 'notebook_2:search' %}" method="get" id="search-form">
+        <input id="search-bar" type="text" placeholder="search" name="search_query">
+    </form>
+
+    <div id="right_info">
+        <a id="new-item" href="{% url 'notebook_2:item_create' %}?actionable={{container.seeingActionables}}&container_pk={{container.id}}">&#43;</a>
+        <a id="log-out" href="{% url 'notebook_2:logout' %}"> logout </a>
     </div>
-    {% block content %}
-
-
-    {% endblock content %}
-
-</body>
+    <div style="color: white;">
+        {{ request.user|title }}
+    </div>
+</div>
 
 <script>
     if ("{% url 'notebook_2:containers' %}" === "{{request.path}}"){
@@ -117,6 +111,5 @@
         x.style.backgroundColor = "#c82922";
         x.style.color = "white";
     }
-
 
 </script>

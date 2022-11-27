@@ -7,7 +7,7 @@ urlpatterns = [
     path('', views.containersView.as_view(), name='containers'),
     path('container/<int:pk>/', views.containerDetailView.as_view(), name='container_detail'),
     path('new/container', views.containerCreateView.as_view(), name='container_create'),
-    path('edit/container/<int:pk>/', views.containerUpdateView.as_view(), name='container_update'),#
+    path('edit/container/<int:pk>/', views.containerUpdateView.as_view(), name='container_update'),
     path('delete/container/<int:pk>/', views.containerDeleteView.as_view(), name='container_delete'),
 
     path('collapse/<int:pk>/', views.containerCollapse, name='container_collapse'),

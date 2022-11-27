@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django import forms
 from django.db.models import Q
 from django.contrib.auth.views import LoginView, LogoutView
+from django.shortcuts import get_object_or_404
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
@@ -27,11 +28,17 @@ def containerCollapse(request, pk):
 
 
 def containerChangeTab(request, pk):
-    """toggles action or non-actionable or not on containerDetailView"""
+    """toggles actionable or non-actionable on containerDetailView.
+    this function view is called with htmx from a div, doesn't return a full page."""
     c = Container.objects.get(pk=pk, owner=request.user)
     if request.GET.get('toggle') == "True":
+        #toggleTab changes a 'seeingActionables' boolean atribute on
+        #model that keeps track of the state the user left the container in.
         c.toggleTab()
-    item_list = c.getItems().order_by('done', '-updated_at') #all done go bottom, most recently created on top.
+
+    #all done items go bottom, most recently created go on top.
+    item_list = c.getItems().order_by('done', '-updated_at')
+    #filtering for actionable or non-actionable items is done on html template.
     return render(request, 'notebook_2/itemList.html', {'item_list': item_list, 'container': c})
 
 
@@ -147,11 +154,16 @@ class containerUpdateView(LoginRequiredMixin, UpdateView):
     fields = ["name", "description", "parentContainer"]
     success_url = reverse_lazy('notebook_2:containers')
 
+    def get_context_data(self, **kwargs):
+        ctx = super(containerUpdateView, self).get_context_data()
+        ctx['container'] = get_object_or_404(Container, owner=self.request.user, pk=self.kwargs['pk'])
+        return ctx
+
     def get_form(self):
         form = super(containerUpdateView, self).get_form()
         a_field = form.fields["parentContainer"]
         a_field.required = False
-        #excludes itself from query set to select from -a container shouldn't be a subcontainer of itself. 
+        #excludes itself as option from queryset to select from -because a container shouldn't be a subcontainer of itself. 
         a_field.queryset = Container.objects.filter(owner=self.request.user).exclude(pk=self.kwargs['pk'])
         return form
 
@@ -182,33 +194,32 @@ class itemCreateView(LoginRequiredMixin, CreateView):
     
     def get_success_url(self):
         container_pk = self.request.GET.get('container_pk')
-        #if container_pk is passed on get request as query,
-        #and such entry exists for current particular user
+        #if container_pk is passed on get request as query, and such entry exists for currently logged in user...
         if container_pk != "" and Container.objects.filter(pk=container_pk, owner=self.request.user).exists():
-            #we go to its containerDetailView.
+            #we set success_url as the one to its containerDetailView
             return reverse_lazy("notebook_2:container_detail", kwargs={'pk': container_pk})
-        #or to the containersView otherwise.
+        #or the containersView's otherwise.
         return reverse_lazy("notebook_2:containers") 
     
     def get_context_data(self, *args, **kwargs):
         ctx = super(itemCreateView, self).get_context_data( *args,**kwargs)
 
         container_pk = self.request.GET.get('container_pk')
-        if container_pk != "": #handling case where there is no container_pk to pass a container to context.
+        if container_pk != "": #handling case where there is no container_pk passed on get request.
             ctx['container'] = Container.objects.get(pk=container_pk, owner=self.request.user) #user-owned container to populate themplate.
 
         return ctx
 
     def get_form(self):
         f = super(itemCreateView, self).get_form()
-        container_list = Container.objects.filter(owner=self.request.user) #prepopulating parentContainer field. and limiting queryset to user-owned Containers.
-
         
-        container_pk = self.request.GET.get('container_pk')
-        f.fields['parentContainer'].initial = container_pk if container_pk != "" else None #handling case where there is no container_pk to prepopulate the field.
+        #limiting queryset to user-owned Containers.
         f.fields["parentContainer"].queryset = Container.objects.filter(owner=self.request.user)
+        #field is not prepopulated if 'container_pk' value is not valid.
+        f.fields['parentContainer'].initial = self.request.GET.get('container_pk')
 
         f.fields['parentItem'].required = False
+        #field is just not prepopulated if value is not valid.
         f.fields['parentItem'].initial = self.request.GET.get("item_inspiring")
         f.fields['parentItem'].widget = forms.HiddenInput()
         f.fields['parentItem'].queryset = Item.objects.filter(owner=self.request.user)
@@ -251,8 +262,6 @@ class itemUpdateView(LoginRequiredMixin, UpdateView):
         f.fields['parentItem'].widget = forms.HiddenInput() #and sets it as not required (user has to delete and create a different instance to change it)
         f.fields['parentItem'].queryset = Item.objects.filter(owner=self.request.user)
         return f
-
-    
 
 
 class itemDeleteView(LoginRequiredMixin, DeleteView):

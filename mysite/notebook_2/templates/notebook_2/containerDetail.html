@@ -1,92 +1,47 @@
 {% extends 'notebook_2/main.html' %}
 {% block content %}
-  <style>
-    .bar {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: #e4433a;
-            top: 0;
-            width: 550px;
-    }
-
-
-    .bar a {
-            float: left;
-            width: 50%;
-            display: inline-block;
-            color: white;
-            text-align: center;
-            cursor: pointer;
-    }
-
-    .item-list {
-      padding-top: 10px;
-    }
-
-    .active-button {
-            background-color: #c82922;
-            color: white;
-    }
-
-    .item_div i {
-      cursor: pointer;
-    }
-
-    i {
-      cursor: pointer;
-    }
-
-    button {
-      border: none;
-      cursor:pointer;
-    }
-
-
-  </style>
-  <body>
-
-    {% include 'notebook_2/navigation_bar.html' %}
-    
-    <h1 id="container-name">{{ container }}</h1>
-    <p>{{ container.description }}</p>
-    <div style="float: right;">
-      <a class="fa-solid fa-pen" href= "{% url 'notebook_2:container_update' container.id %}"></a>
-      <a class="fa-solid fa-x" style="color: red;" href= "{% url 'notebook_2:container_delete' container.id %}"></a>
-    </div>
-    
-    <br>
-    
-    <hr>
-    
-    <div class="bar" hx-trigger="click" hx-target="#item_list" hx-get="{% url 'notebook_2:container_changeTab' pk=container.id %}?toggle=True">
-      {% if container.seeingActionables %}
-      <a class="active-button" id="actionable" onclick="toggleActionable();">actionable</a>
-      <a id="non-actionable" onclick="toggleActionable();">non-actionable</a>
-      {% else %}
-      <a id="actionable" onclick="toggleActionable();">actionable</a>
-      <a class="active-button" id="non-actionable" onclick="toggleActionable();">non-actionable</a>
-      {% endif %}
-    </div>
-    
-    <div hx-trigger="load" id="item_list" hx-get="{% url 'notebook_2:container_changeTab' pk=container.id %}">
-      <!--htmx fills this in when the page load requesting from the url 'container_changeTab' using template 'itemList.html'-->
-    </div>
-
-    <script>
-      function toggleActionable() {
-        var x = document.getElementById("actionable");
-        if (x.className === "") {
-          x.className = "active-button";
-          document.getElementById("non-actionable").className = "";
-        } else {
-          x.className = "";
-          document.getElementById("non-actionable").className = "active-button";
-        }
-
-      }
-    </script>
-      
+<div>
+  {% include 'notebook_2/navigation_bar.html' %}
+  
+  <h1 id="container-name">{{ container }}</h1>
+  <p>{{ container.description }}</p>
+  <div style="float: right;">
+    <a class="fa-solid fa-pen" href= "{% url 'notebook_2:container_update' container.id %}"></a>
+    <a class="fa-solid fa-x" style="color: red;" href= "{% url 'notebook_2:container_delete' container.id %}"></a>
+  </div>
+  
+  <br>
+  
+  <hr>
+  
+  <div class="bar" hx-trigger="click" hx-target="#item_list" hx-get="{% url 'notebook_2:container_changeTab' pk=container.id %}?toggle=True">
+    {% if container.seeingActionables %}
+    <a class="active-button" id="actionable" onclick="toggleActionable();">actionable</a>
+    <a id="non-actionable" onclick="toggleActionable();">non-actionable</a>
+    {% else %}
+    <a id="actionable" onclick="toggleActionable();">actionable</a>
+    <a class="active-button" id="non-actionable" onclick="toggleActionable();">non-actionable</a>
+    {% endif %}
+  </div>
+  
+  <div hx-trigger="load" id="item_list" hx-get="{% url 'notebook_2:container_changeTab' pk=container.id %}">
+    <!--htmx fills this in when the page load requesting from the url 'container_changeTab' using template 'itemList.html'-->
+  </div>
 </div>
+
+  <script>
+    function toggleActionable() {
+      var x = document.getElementById("actionable");
+      if (x.className === "") {
+        x.className = "active-button";
+        document.getElementById("non-actionable").className = "";
+      } else {
+        x.className = "";
+        document.getElementById("non-actionable").className = "active-button";
+      }
+
+    }
+  </script>
+      
+
 {% endblock content %}

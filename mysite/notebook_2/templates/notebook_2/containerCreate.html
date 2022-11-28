@@ -1,13 +1,11 @@
 {% extends 'notebook_2/main.html' %}
 {% block content %}
-<div>
-    <h1>Add new container</h1>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" onclick="window.location='{% url 'notebook_2:containers' %}'; return false;" value="cancel">
-        <input type="submit" value="create">
-    </form>
-</div>
+<h1>Add new container</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" onclick="window.location='{% url 'notebook_2:containers' %}'; return false;" value="cancel">
+    <input type="submit" value="create">
+</form>
 {% endblock content %}
 

@@ -1,12 +1,10 @@
 {% extends 'notebook_2/main.html' %}
 {% block content %}
-<div>
-    <h2>Delete container</h2>
-    <p>Are you sure you want to delete "{{container}}"</p>
-    <form action="" method="post">
-        {% csrf_token %}
-        <input type="submit" onclick="window.location='{% url 'notebook_2:containers' %}' ; return false;" value="cancel">
-        <input type="submit" value="delete">
-    </form>
-</div>
+<h2>Delete container</h2>
+<p>Are you sure you want to delete "{{container}}"</p>
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="submit" onclick="window.location='{% url 'notebook_2:containers' %}' ; return false;" value="cancel">
+    <input type="submit" value="delete">
+</form>
 {% endblock content %}

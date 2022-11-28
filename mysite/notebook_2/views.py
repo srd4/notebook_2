@@ -231,7 +231,8 @@ class itemCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         i = form.save(commit=False)
-        i.owner = self.request.user #set item as owned by the user who was logged in on creation and saving it.
+        #set item as owned by the user who was logged in on creation.
+        i.owner = self.request.user
         i.save()
         return super(itemCreateView, self).form_valid(form)
 

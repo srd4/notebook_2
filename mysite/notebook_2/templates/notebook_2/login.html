@@ -1,6 +1,6 @@
 {% extends 'notebook_2/main.html' %}
 {% block content %}
-<h1 style="width: 50%; margin: auto;">Login to Notebook 2.0</h1>
+<h1>Login to Notebook 2.0</h1>
 <div id="login">
     <form method="POST">
             {% csrf_token %}
@@ -8,5 +8,5 @@
         <input id="bton" type="submit" value="Login">
     </form>
 
-    <p>New to Notebook 2.0? <a style="text-decoration:underline;" href="{% url 'notebook_2:register' %}">Register</a></p>
+    <p>New to Notebook 2.0? <a href="{% url 'notebook_2:register' %}">Register</a></p>
 {% endblock content %}

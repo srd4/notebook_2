@@ -9,7 +9,7 @@
         <a id="new-item" href="{% url 'notebook_2:item_create' %}?actionable={{container.seeingActionables}}&container_pk={{container.id}}">&#43;</a>
         <a id="log-out" href="{% url 'notebook_2:logout' %}"> logout </a>
     </div>
-    <div style="color: white;">
+    <div>
         {{ request.user|title }}
     </div>
 </div>

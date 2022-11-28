@@ -5,9 +5,9 @@
   
   <h1 id="container-name">{{ container }}</h1>
   <p>{{ container.description }}</p>
-  <div style="float: right;">
+  <div>
     <a class="fa-solid fa-pen" href= "{% url 'notebook_2:container_update' container.id %}"></a>
-    <a class="fa-solid fa-x" style="color: red;" href= "{% url 'notebook_2:container_delete' container.id %}"></a>
+    <a class="fa-solid fa-x" href= "{% url 'notebook_2:container_delete' container.id %}"></a>
   </div>
   
   <br>

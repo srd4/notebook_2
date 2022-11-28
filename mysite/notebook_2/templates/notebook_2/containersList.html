@@ -4,30 +4,30 @@
         <!--clicking on bullet points produces an htmx swap with containerList.html targetted at parent div through the function view called container_collapse-->
         <!--the container_collapse view returns an up-to-date, with the container's attributes, rendered template-->
             {% if container.collapsed %}
-            <i class="fa-solid fa-caret-right" hx-target="#container-{{container.id}}" hx-post="{% url 'notebook_2:container_collapse' container.id%}" hx-trigger="click" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' style="cursor: pointer;"></i>
+            <i class="fa-solid fa-caret-right" hx-target="#container-{{container.id}}" hx-post="{% url 'notebook_2:container_collapse' container.id%}" hx-trigger="click" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'></i>
             {% else %}
-            <i class="fa-solid fa-caret-down"  hx-target="#container-{{container.id}}" hx-post="{% url 'notebook_2:container_collapse' container.id%}" hx-trigger="click" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' style="cursor: pointer;"></i>
+            <i class="fa-solid fa-caret-down"  hx-target="#container-{{container.id}}" hx-post="{% url 'notebook_2:container_collapse' container.id%}" hx-trigger="click" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'></i>
             {% endif %}
         {% else %}
         <!--bullet point is just a circle when container doesn't have subcontainers-->
             <i class="circle"></i>
         {% endif %}
 
-        <div style="display: inline-block;">
+        <div>
             <a href="{% url 'notebook_2:container_detail' container.id %}">{{container}} </a>
             <!--getItems and countTreeItems are methods from model that help count data displayed on container view-->
             {% if container.getChildren %}
-                <span style="color:gray"> {{ container.getItems|length }} ({{ container.countTreeItems }})</span>
+                <span> {{ container.getItems|length }} ({{ container.countTreeItems }})</span>
             {% else %}
-                <span style="color:gray">{{ container.getItems|length }}</span>
+                <span>{{ container.getItems|length }}</span>
             {% endif %}
         </div>
 
-        <div style="float: right;">
+        <div>
             <!--button for editing/updating container-->
             <a class="fa-solid fa-pen" href= "{% url 'notebook_2:container_update' container.id %}"></a>
             <!--button for deleting a container-->
-            <a style="color: red;" class="fa-solid fa-x" href= "{% url 'notebook_2:container_delete' container.id %}"></a>
+            <a class="fa-solid fa-x" href= "{% url 'notebook_2:container_delete' container.id %}"></a>
         </div>
         
         <!--if there are subcontainers-->

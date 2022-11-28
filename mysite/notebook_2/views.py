@@ -257,6 +257,9 @@ class itemUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_form(self):
         f = super(itemUpdateView, self).get_form()
+
+        #limiting queryset to user-owned Containers.
+        f.fields["parentContainer"].queryset = Container.objects.filter(owner=self.request.user)
         
         f.fields['parentItem'].required = False #hiddes parentitem input.
         f.fields['parentItem'].widget = forms.HiddenInput() #and sets it as not required (user has to delete and create a different instance to change it)

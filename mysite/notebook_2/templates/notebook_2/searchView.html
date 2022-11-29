@@ -20,13 +20,13 @@
 
 <h1>Item results</h1>
 
-<div id="not-archived">
-    <div class="bar">
-        <a class="active-button" id="actionable" onclick="toggleActionable();">actionable</a>
-        <a id="non-actionable" onclick="toggleActionable();">non-actionable</a>
+<div id="not-archived"> 
+    <div class="container-tab">
+        <button class="container-tab-button" id="actionable" onclick="pressSearchTab(this);" >actionable</button>
+        <button class="container-tab-button" id="non-actionable" onclick="pressSearchTab(this);">non-actionable</button>
     </div>
 
-    <div class="item_list" id="act">
+    <div class="item_list" id="actionable-list">
         {% if item_list %}
     <div>
         {% for item in item_list %}
@@ -40,7 +40,7 @@
         {% endif %}
     </div>
 
-    <div class="item_list" style="display: none;" id="non_act" >
+    <div class="item_list" style="display: none;" id="non-actionable-list" >
         {% if item_list %}
         <div class="item_div">
             {% for item in item_list %}
@@ -55,24 +55,8 @@
     </div>
 </div>
 
-
 <script>
-    function toggleActionable() {
-        var x = document.getElementById("act");
-        var y = document.getElementById("non_act");
-        if (x.style.display === "none") {
-        x.style.display = "block";
-        y.style.display = "none";
-        document.getElementById("actionable").className = "active-button"
-        document.getElementById("non-actionable").className = ""
-        } else {
-        x.style.display = "none";
-        y.style.display = "block";
-        document.getElementById("non-actionable").className = "active-button"
-        document.getElementById("actionable").className = ""
-        }
-
-    }
+    pressTab(document.getElementById('actionable'));
 </script>
 
 {% endblock content %}

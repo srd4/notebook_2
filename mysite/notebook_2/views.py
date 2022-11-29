@@ -28,13 +28,14 @@ def containerCollapse(request, pk):
 
 
 def containerChangeTab(request, pk):
-    """toggles actionable or non-actionable on containerDetailView.
-    this function view is called with htmx from a div, doesn't return a full page."""
+    """called with htmx from a div, returns html section. renders itemList.html"""
+
     c = Container.objects.get(pk=pk, owner=request.user)
-    if request.GET.get('toggle') == "True":
-        #toggleTab changes a 'seeingActionables' boolean atribute on
-        #model that keeps track of the state the user left the container in.
-        c.toggleTab()
+    if request.GET.get('on_actionables_tab') == "True":
+        c.seeingActionables = True
+    else:
+        c.seeingActionables = False
+    c.save()
 
     #all done items go bottom, most recently created go on top.
     item_list = c.getItems().order_by('done', '-updated_at')
@@ -132,11 +133,15 @@ class containerCreateView(LoginRequiredMixin, CreateView):
 
     def get_form(self):
         form = super(containerCreateView, self).get_form()
+
         #make parent container not required. but appear.
-        a_field = form.fields["parentContainer"]
-        a_field.required = False
+        form.fields["parentContainer"].required = False
         #limit Container foreignkey options to pick from to containers the user owns.
-        a_field.queryset = Container.objects.filter(owner=self.request.user)
+        form.fields["parentContainer"].queryset = Container.objects.filter(owner=self.request.user)
+
+        form.fields["name"].widget.attrs['placeholder'] = "Container name"
+        form.fields["description"].widget.attrs['placeholder'] = "Container description"
+
         return form
 
     def form_valid(self, form):
@@ -223,6 +228,8 @@ class itemCreateView(LoginRequiredMixin, CreateView):
         f.fields['parentItem'].initial = self.request.GET.get("item_inspiring")
         f.fields['parentItem'].widget = forms.HiddenInput()
         f.fields['parentItem'].queryset = Item.objects.filter(owner=self.request.user)
+
+        f.fields['statement'].widget.attrs['placeholder'] = "Item statement"
 
         #prepopulate actionable field with what's on query.
         f.fields['actionable'].initial = True if self.request.GET.get('actionable') == "True" else False

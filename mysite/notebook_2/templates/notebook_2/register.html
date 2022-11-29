@@ -1,8 +1,8 @@
 {% extends 'notebook_2/main.html' %}
 {% block content %}
-<h1 style="margin: auto;">Register in Notebook 2.0</h1>
+<h1 class="crud-h" style="margin: auto;" >Register in Notebook 2.0</h1>
 <div id="login">
-    <form method="POST">
+    <form class="crud-form" method="POST">
             {% csrf_token %}
             {{ form.as_p }}
         <input id="bton" type="submit" value="Register">

@@ -232,7 +232,7 @@ class itemCreateView(LoginRequiredMixin, CreateView):
         f.fields['statement'].widget.attrs['placeholder'] = "Item statement"
 
         #prepopulate actionable field with what's on query.
-        f.fields['actionable'].initial = True if self.request.GET.get('actionable') == "True" else False
+        f.fields['actionable'].initial = True if self.request.GET.get('on_actionables_tab') == "True" else False
 
         return f
 

@@ -8,5 +8,6 @@
         {% endfor %}
 {% endif %}
 </div>
+
 <!--with htmx in containerDetail view's template, this anchor replaces/updates nav bar button with the same id-->
 <a hx-swap-oob="true" id="new-item" href="{% url 'notebook_2:item_create' %}?actionable={{container.seeingActionables}}&container_pk={{container.id}}">&#43;</a>

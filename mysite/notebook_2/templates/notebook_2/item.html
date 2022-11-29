@@ -1,31 +1,31 @@
-<style>
-    a {
-        cursor: pointer;
-    }
-</style>
-
-<div id="item-{{item.id}}" class="item">
+<div id="item-{{item.id}}" class="item" onmouseover="showEditButtons(this, true)" onmouseleave="showEditButtons(this, false)">
     {% if item.actionable %}
         <!--item is actionable-->
         {% if item.done %}
             <!--the item's done attribute is True so text is crossed out and a checked circle appears.-->
-            <button class="fa-regular fa-circle-check" hx-post="{% url 'notebook_2:item_done' item.id %}" hx-trigger="click" hx-target="#item-{{item.id}}" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' style="color: rgb(68, 151, 12)"></button>
-            <s id="crossed-out-{{item.id}}">{{ item }}</s>
+            <button class="fa-regular fa-circle-check" hx-post="{% url 'notebook_2:item_done' item.id %}" hx-trigger="click" hx-target="#item-{{item.id}}" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'></button>
+            <s class="crossed-out-item">{{ item }}</s>
         {% else %}
             <!--the done attribute is false, circle is not checked and text is not crossed out.-->
             <button class="fa-regular fa-circle" hx-post="{% url 'notebook_2:item_done' item.id %}" hx-trigger="click" hx-target="#item-{{item.id}}" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'></button>
             {{ item }}
         {% endif %}
-            <!--actionables can inspire ideas to-->
-        <a class="fa-solid fa-lightbulb" href="{% url 'notebook_2:item_create' %}?item_inspiring={{item.id}}&actionable={{container.seeingActionables}}&container_pk={{item.parentContainer.id}}"></a>
     {% else %}
         <!--item is non-actionable-->
         <a class="fa-solid fa-lightbulb" href="{% url 'notebook_2:item_create' %}?item_inspiring={{item.id}}&actionable={{container.seeingActionables}}&container_pk={{item.parentContainer.id}}"></a>
         {{ item }}
     {% endif %}
 
-    <!--all items have delete and update buttons-->
-    <a class="fa-solid fa-pen" onclick="window.location='{% url 'notebook_2:item_update' item.id %}?container_pk={{item.parentContainer.id}}' ; return false;"></a>
-    <a class="fa-solid fa-x" style="color: red;" onclick="window.location='{% url 'notebook_2:item_delete' item.id %}' ; return false;"></a>
+    <div class="edit-buttons" id="edit-buttons-{{item.id}}">
+        {% if item.actionable %}
+            <!--actionables can inspire ideas to-->
+            <a class="fa-solid fa-lightbulb" href="{% url 'notebook_2:item_create' %}?item_inspiring={{item.id}}&actionable={{container.seeingActionables}}&container_pk={{item.parentContainer.id}}"></a>
+        {% endif %}
+
+        <!--all items have delete and update buttons-->
+        <a class="fa-solid fa-pen" onclick="window.location='{% url 'notebook_2:item_update' item.id %}?container_pk={{item.parentContainer.id}}' ; return false;"></a>
+        <a class="fa-solid fa-x" onclick="window.location='{% url 'notebook_2:item_delete' item.id %}' ; return false;"></a>
+    </div>
+
 </div>
 

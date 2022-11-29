@@ -1,14 +1,21 @@
 {% extends 'notebook_2/main.html' %}
 {% block content %}
-<div>
-    <h1>Update '{{ container }}'</h1>
-    <form action="" method="post">
+<h1 class="crud-h">Update '{{ container }}'</h1>
+<div class="crud-form-container">
+    <form class="crud-form" action="" method="post">
         {% csrf_token %}
-        <table>
-            {{ form.as_p }}
-        </table>
-        <input type="submit" onclick="window.location='{% url 'notebook_2:containers' %}'; return false;" value="cancel">
-        <input type="submit" value="save">
+        {{form.name}}
+        <br>
+        {{form.description}}
+        <br>
+        <span>Parent container:</span>
+        <br>
+        {{form.parentContainer}}
+        <br>
+        <div class="submit-buttons">
+            <input type="submit" value="Save">
+            <input type="submit" onclick="window.location='{% url 'notebook_2:containers' %}'; return false;" value="Cancel">
+        </div>
     </form>
 </div>
 {% endblock content %}

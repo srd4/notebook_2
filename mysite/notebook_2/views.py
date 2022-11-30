@@ -38,7 +38,7 @@ def containerChangeTab(request, pk):
     c.save()
 
     #all done items go bottom, most recently created go on top.
-    item_list = c.getItems().order_by('done', '-updated_at')
+    item_list = c.getItems().order_by('done', 'updated_at')
     #filtering for actionable or non-actionable items is done on html template.
     return render(request, 'notebook_2/itemList.html', {'item_list': item_list, 'container': c})
 

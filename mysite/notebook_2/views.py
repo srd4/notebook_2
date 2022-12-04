@@ -309,7 +309,7 @@ class itemUpdateView(LoginRequiredMixin, UpdateView):
         f.fields['parentItem'].queryset = Item.objects.filter(owner=self.request.user)
 
         f.fields['tags'].required = False
-        f.fields['tags'].queryset = get_list_or_404(Tag, owner=self.request.user)
+        f.fields['tags'].queryset = Tag.objects.filter(owner=self.request.user)
 
         return f
 

@@ -74,6 +74,17 @@ class Container(models.Model):
         return i
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=128)
+    description = models.TextField(max_length=140)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
 class Item(models.Model):
     actionable = models.BooleanField(default=False)
     done = models.BooleanField(default=False)
@@ -84,6 +95,7 @@ class Item(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     parentItem = models.ForeignKey('self', null=True, on_delete=models.SET_NULL)
     completed_at = models.DateTimeField(null=True, default=None)
+    tags = models.ManyToManyField(Tag)
 
     def create_ItemStatementVersion(self):
         """creates an ItemStatementVersion object with the statement that the Item currently has on db"""

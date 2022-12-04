@@ -23,8 +23,8 @@
         {% endif %}
 
         <!--all items have delete and update buttons-->
-        <a class="fa-solid fa-pen" onclick="window.location='{% url 'notebook_2:item_update' item.id %}?container_pk={{item.parentContainer.id}}' ; return false;"></a>
-        <a class="fa-solid fa-x" onclick="window.location='{% url 'notebook_2:item_delete' item.id %}' ; return false;"></a>
+        <a class="fa-solid fa-pen" href="{% url 'notebook_2:item_update' item.id %}?container_pk={{item.parentContainer.id}}"></a>
+        <a class="fa-solid fa-x" href="{% url 'notebook_2:item_delete' item.id %}"></a>
     </div>
 
 </div>

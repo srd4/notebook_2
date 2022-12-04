@@ -1,18 +1,74 @@
 from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
-from .models import Container, Item
+from .models import Container, Item, Tag
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 from django import forms
 from django.db.models import Q
 from django.contrib.auth.views import LoginView, LogoutView
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, get_list_or_404
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 
 LoginRequiredMixin.login_url = reverse_lazy('notebook_2:login')
+
+def divide_querysets_by_tag(tuple_list,  tag):
+    """receives a list of tuples where each tuple has a list of tags and a queryset (filtered by those tags)
+    thus, every Item in queryset is related to every Tag in the list.
+    [([tag_1, tag_2, ...], queryset), ...]
+    returns a list of tuples in the same format."""
+    end_list = list()
+    for tup in tuple_list:
+        # a new queryset is created filtering original by the tag. the new tag is added to the list of tags.
+        end_list.append((tup[0] + [tag], tup[1].filter(tags=tag)))
+        # we keep elements excluded from filter above. no tag needs to be added to list.
+        end_list.append((tup[0], tup[1].exclude(tags=tag)))
+    return end_list
+
+
+def divide_querysets_by_tag_list(tuple_list, tags_list):
+    """runs divide_querysets_by_tag on tuple_list,
+    then runs it again on that output with next Tag in tags_list and so on."""
+    for tag in tags_list:
+        tuple_list = divide_querysets_by_tag(tuple_list, tag)
+    return tuple_list
+
+
+def containerChangeTab(request, pk):
+    """called with htmx from a div, returns html section. renders itemList.html"""
+
+    c = get_object_or_404(Container, pk=pk, owner=request.user)
+
+    # template button clicked sends get parameter that tells us what tab inside container we are in:
+    if request.GET.get('on_actionables_tab') == "True":
+        # updates container field that tells us what tab we are in:
+        c.seeingActionables = True
+        # asks for queryset of items that belong in the tab we are in:
+        initial_queryset = c.item_set.filter(actionable=True)
+    else:
+        # same as above but opposite case.
+        c.seeingActionables = False
+        initial_queryset = c.item_set.filter(actionable=False)
+    # saves model with 'seeingActionables' field changed above:
+    c.save()
+
+    # selecting tags by primary keys passed as parameters on get request:
+    # tags = [Tag.objects.get(pk=i) for i in request.GET.getlist('tag')]
+
+    # selecting all Tag instances:
+    tags = Tag.objects.all()
+
+    # filtering the initial_queryset a little bit more.
+    initial_queryset = initial_queryset.exclude(done=True).order_by('done', 'created_at')
+    # generating the list of tuples where tuple = (tag_list, queryset).
+    querysets = divide_querysets_by_tag_list([([], initial_queryset)], tags)
+    # ignoring querysets that ended up empty (a queryset is empty if no item satisfied filters like having two tags at the same time).
+    querysets = [tup for tup in querysets if len(tup[1])]
+    
+    return render(request, 'notebook_2/itemList.html', {'querysets': querysets, 'container': c})
+
 
 def itemDone(request, pk):
     i = Item.objects.get(pk=pk, owner=request.user)
@@ -25,22 +81,6 @@ def containerCollapse(request, pk):
     c = Container.objects.get(pk=pk, owner=request.user)
     c.toggleCollapsed()
     return render(request, 'notebook_2/containersList.html', {'container_list':[c,]})
-
-
-def containerChangeTab(request, pk):
-    """called with htmx from a div, returns html section. renders itemList.html"""
-
-    c = Container.objects.get(pk=pk, owner=request.user)
-    if request.GET.get('on_actionables_tab') == "True":
-        c.seeingActionables = True
-    else:
-        c.seeingActionables = False
-    c.save()
-
-    #all done items go bottom, most recently created go on top.
-    item_list = c.getItems().order_by('done', '-updated_at')
-    #filtering for actionable or non-actionable items is done on html template.
-    return render(request, 'notebook_2/itemList.html', {'item_list': item_list, 'container': c})
 
 
 class loginView(LoginView):
@@ -110,12 +150,6 @@ class containerDetailView(LoginRequiredMixin, generic.ListView):
     template_name = 'notebook_2/containerDetail.html'
     context_object_name = 'item_list'
 
-    def get_queryset(self):
-        #this is the pk that is part of the url, which references the container...
-        container_pk = self.kwargs['pk']
-        #...that we return the items of.
-        return Item.objects.filter(parentContainer=container_pk, owner=self.request.user)
-
     def get_context_data(self, **kwargs):
         container_pk = self.kwargs['pk']
         c = Container.objects.get(pk=container_pk, owner=self.request.user)
@@ -124,6 +158,7 @@ class containerDetailView(LoginRequiredMixin, generic.ListView):
         #container needed to retrieve information on container detail view.
         #item_list corresponding to container, see get_queryset method above this one.
         return {"container": c}
+
 
 class containerCreateView(LoginRequiredMixin, CreateView):
     model = Container
@@ -247,7 +282,7 @@ class itemCreateView(LoginRequiredMixin, CreateView):
 class itemUpdateView(LoginRequiredMixin, UpdateView):
     model = Item
     template_name = 'notebook_2/itemUpdate.html'
-    fields = ["done", "parentContainer", "parentItem", "statement", "actionable"]
+    fields = ["done", "parentContainer", "parentItem", "statement", "actionable", "tags"]
 
     def get_success_url(self):
         #as you can only see items from containers, container must exist.
@@ -272,6 +307,10 @@ class itemUpdateView(LoginRequiredMixin, UpdateView):
         f.fields['parentItem'].required = False #hiddes parentitem input.
         f.fields['parentItem'].widget = forms.HiddenInput() #and sets it as not required (user has to delete and create a different instance to change it)
         f.fields['parentItem'].queryset = Item.objects.filter(owner=self.request.user)
+
+        f.fields['tags'].required = False
+        f.fields['tags'].queryset = get_list_or_404(Tag, owner=self.request.user)
+
         return f
 
 

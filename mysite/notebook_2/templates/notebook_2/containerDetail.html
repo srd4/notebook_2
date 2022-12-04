@@ -18,8 +18,9 @@
   </div>
   
   <div hx-trigger="load" id="item_list" hx-get="{% url 'notebook_2:container_changeTab' pk=container.id %}?on_actionables_tab={{container.seeingActionables}}">
-    <!--htmx fills this in when the page load requesting from the url 'container_changeTab' using template 'itemList.html'-->
+    <!--htmx fills this in when the page loads requesting from the url 'container_changeTab' using template 'itemList.html'-->
   </div>
+
   <script>
     initializeTab('{{ container.seeingActionables }}')
   </script>

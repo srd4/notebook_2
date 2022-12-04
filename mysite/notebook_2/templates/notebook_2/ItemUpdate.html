@@ -16,6 +16,10 @@
     {{form.done.label}}:
     {{form.done}}
 
+    <br>
+    {{form.tags.label}}:
+    {{form.tags}}
+
     <input type="submit" value="Save">
     <input type="submit" onclick="window.location='{% url 'notebook_2:container_detail' item.parentContainer.id %}' ; return false;" value="Cancel">
     

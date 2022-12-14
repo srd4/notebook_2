@@ -1,12 +1,15 @@
-from django.views import generic, CreateView, UpdateView, DeleteView, FormView
+from django.views import generic
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
 from django import forms
 from django.db.models import Q
 from django.contrib.auth.views import LoginView, LogoutView
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+
 from .models import Container, Item, Tag
 from .forms import ContainerForm
 

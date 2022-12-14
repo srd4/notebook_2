@@ -1,16 +1,14 @@
-from django.views import generic
-from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
-from .models import Container, Item, Tag
+from django.views import generic, CreateView, UpdateView, DeleteView, FormView
 from django.urls import reverse_lazy
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django import forms
 from django.db.models import Q
 from django.contrib.auth.views import LoginView, LogoutView
-from django.shortcuts import get_object_or_404, get_list_or_404
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from .models import Container, Item, Tag
+from .forms import ContainerForm
 
 LoginRequiredMixin.login_url = reverse_lazy('notebook_2:login')
 
@@ -161,10 +159,16 @@ class containerDetailView(LoginRequiredMixin, generic.ListView):
 
 
 class containerCreateView(LoginRequiredMixin, CreateView):
-    model = Container
+    # Custom form that inherits from ModelForm, check forms.py
+    form_class = ContainerForm
     template_name = 'notebook_2/containerCreate.html'
-    fields = ["name", "description", "parentContainer"]
     success_url = reverse_lazy('notebook_2:containers')
+
+    # Open Ai's chatgpt made this.
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
     def get_form(self):
         form = super(containerCreateView, self).get_form()
@@ -181,6 +185,7 @@ class containerCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         a_container = form.save(commit=False)
+
         #save container with owner foreignkey to user who was logged in on its creation.
         a_container.owner = self.request.user
         a_container.save()

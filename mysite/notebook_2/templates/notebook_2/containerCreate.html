@@ -4,6 +4,8 @@
     <h1 class="crud-h">Add new container</h1>
     <form class="crud-form" action="" method="post">
         {% csrf_token %}
+        {{form.non_field_errors}}
+        {{form.}}
         {{form.name}}
         <br>
         {{form.description}}

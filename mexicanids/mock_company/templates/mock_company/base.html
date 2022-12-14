@@ -1,0 +1,63 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Company website</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora">
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet'>
+
+    <script src="https://unpkg.com/htmx.org@1.8.4" integrity="sha384-wg5Y/JwF7VxGk4zLsJEcAojRtlVp1FKKdGy1qN+OMtdq72WRvX/EdRdqg/LOhYeV" crossorigin="anonymous"></script>
+    <script src="{% static 'mock_company/script.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'mock_company/style.css' %}">
+</head>
+<body>
+
+    <header>
+        <div class="site-title">
+            <h1>COMPANY</h1>
+            <p>Recruitment international</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a class="current-page" onclick="updateActive(this)" href="" hx-trigger="click" hx-target="#web-page-content" hx-get="{% url 'mock_company:home' %}">HOME</a></li>
+                <li><a onclick="updateActive(this)" href="" hx-trigger="click" hx-target="#web-page-content" hx-get="{% url 'mock_company:services' %}">SERVICES</a></li>
+                <li><a onclick="updateActive(this)" href="" hx-trigger="click" hx-target="#web-page-content" hx-get="{% url 'mock_company:process' %}">PROCESS</a></li>
+                <li><a onclick="updateActive(this)" href="" hx-trigger="click" hx-target="#web-page-content" hx-get="{% url 'mock_company:about' %}">ABOUT</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    
+
+    <div id="web-page-content" hx-trigger="load" hx-get="{% url 'mock_company:home' %}">
+    </div>
+
+    <div class="title-bar"></div>
+
+    <hr>
+    <div class="form-space">
+        <h2 style="text-align: center;">Contact us</h2>
+        <div hx-trigger="load" hx target="" hx-get="{% url 'mock_company:short_form' %}" id="applicant-form">
+
+        </div>
+    </div>
+    <hr>
+
+    <footer>
+        <div >
+            <p>Temporary foreign worker recruitment agency license number: AR-2111250</p>
+            <p>Attestation number from Revenu Québec: 732293-UMCI-19022719</p>
+
+            <h3>Business hours</h3>
+            <p> Monday to Friday: 9:00 a.m. - 5:00 p.m.</p>
+
+        </div>
+
+        <a href="{% url 'mock_company:base' %}" id="cr-title">© 2021 Company Inc.</a>
+    </footer>
+
+</body>
+</html>

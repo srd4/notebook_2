@@ -1,0 +1,40 @@
+<form hx-post="{% url 'mock_company:full_form' %}" enctype="multipart/form-data" method="POST" novalidate>
+    {% csrf_token %}
+    {{form.first_name}}
+    {{form.first_name.errors}}
+
+    {{form.last_name}}
+    {{form.last_name.errors}}
+
+    {{form.email}}
+    {{form.email.errors}}
+
+    <div class="file-fields">
+        
+        <p class="field-label">{{form.passport.label}}</p>
+        {{form.passport}}
+        {{form.passport.errors}}
+        <div class="guidance-banner">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+
+        <p class="field-label">{{form.identity_document.label}}</p>
+        {{form.identity_document}}
+        {{form.identity_document.errors}}
+
+        
+        <p class="field-label">{{form.drivers_license.label}}</p>
+        {{form.drivers_license}}
+        {{form.drivers_license.errors}}
+        <div class="guidance-banner">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+        
+        <p class="field-label">{{form.extra.label}}</p>
+        {{form.extra}}
+        {{form.extra.errors}}
+    </div>
+
+    {{form.non_field_errors}}
+    <input type="Submit" value="Send">
+</form>

@@ -5,7 +5,6 @@ html {
 * {
     box-sizing: border-box;
     text-decoration: none;
-    
 }
 
 body {
@@ -62,11 +61,11 @@ body {
 }
 
 .nav-bar a:hover {
-    background-color: rgb(200, 41, 34);
+    background-color: darkgreen;
 }
 
 .nav-bar {
-    background-color: #e4433a;
+    background-color: green;
 }
 
 /*containersView*/

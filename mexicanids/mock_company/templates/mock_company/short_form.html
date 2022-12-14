@@ -1,0 +1,8 @@
+<form hx-post="{% url 'mock_company:short_form' %}" enctype="multipart/form-data" method="POST" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="guidance-banner">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+    <input type="Submit" value="Accelerate my process">
+</form>

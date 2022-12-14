@@ -1,0 +1,23 @@
+{% load static %}
+<hr>
+
+<div class="title-bar">
+</div>
+
+<hr>
+
+<div class="image-container">
+    <div class="about-title">
+        <p>Welcome</p>
+    </div>
+    <img src="{% static 'mock_company/toronto_skyline.PNG' %}" alt="">
+</div>
+
+<div id="web-page-content" hx-trigger="load" hx-get="{% url 'mock_company:process' %}">
+</div>
+
+<div id="web-page-content" hx-trigger="load" hx-get="{% url 'mock_company:services' %}">
+</div>
+
+<div id="web-page-content" hx-trigger="load" hx-get="{% url 'mock_company:about' %}">
+</div>

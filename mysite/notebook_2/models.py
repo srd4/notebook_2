@@ -97,20 +97,22 @@ class Item(models.Model):
     completed_at = models.DateTimeField(null=True, default=None)
     tags = models.ManyToManyField(Tag)
 
-    def create_ItemStatementVersion(self):
-        """creates an ItemStatementVersion object with the statement that the Item currently has on db"""
+    def create_StatementVersion(self):
+        """creates a StatementVersion object with the statement the Item currently has (on db)"""
+        # if item doesn't exist, save() is being called for creating (and not updating) an Item object.
         current_statement_exists = Item.objects.filter(pk=self.pk, owner=self.owner).exists()
-        
-        if current_statement_exists: #if this method is not being called for Item creation from self.saved()...
+    
+        #if the Item object is being updated (instead of created)... AND the statement has been changed.
+        if current_statement_exists and (self.statement != current_statement):
             current_statement = Item.objects.get(pk=self.pk, owner=self.owner).statement
-            #get_or_create helps with not repeating an instance that already exists.
-            return ItemStatementVersion.objects.get_or_create(statement=current_statement, defaults={"created_at" : self.updated_at, "parentItem": self,  "owner":self.owner})
+            StatementVersion.objects.get_or_create(statement=current_statement, defaults={"created_at" : self.updated_at, "parentItem": self,  "owner":self.owner})        
+        
         return None
 
 
     def save(self, *args, **kwargs):
-        """creates ItemStatementVersion objects before saving"""
-        self.create_ItemStatementVersion()
+        """creates StatementVersion objects before saving"""
+        self.create_StatementVersion()
         return super().save(*args, **kwargs)
 
     def __str__(self):
@@ -135,7 +137,7 @@ class Item(models.Model):
         return None
 
     def get_versions(self):
-        return ItemStatementVersion.objects.filter(parentItem=self, owner=self.owner)
+        return StatementVersion.objects.filter(parentItem=self, owner=self.owner)
 
     def toggleDone(self):
         """called from views and templates to make self.done values change"""
@@ -150,7 +152,8 @@ class Item(models.Model):
         return self.done
 
 
-class ItemStatementVersion(models.Model):
+class StatementVersion(models.Model):
+    """statements that an element has had."""
     statement = models.TextField(max_length=140)
     created_at = models.DateTimeField(auto_now_add=True)
     parentItem = models.ForeignKey(Item, null=True, on_delete=models.CASCADE)

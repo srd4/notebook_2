@@ -100,11 +100,13 @@ class Item(models.Model):
     def create_StatementVersion(self):
         """creates a StatementVersion object with the statement the Item currently has (on db)"""
         # if item doesn't exist, save() is being called for creating (and not updating) an Item object.
-        current_statement = Item.objects.filter(pk=self.pk, owner=self.owner)
+        current_statement_exists = Item.objects.filter(pk=self.pk, owner=self.owner).exists()
     
         #if the Item object is being updated (instead of created)... AND the statement has been changed.
-        if current_statement.exists() and (self.statement != current_statement.get(pk=self.pk).statement):
-            StatementVersion.objects.get_or_create(statement=current_statement, defaults={"created_at" : self.updated_at, "parentItem": self,  "owner":self.owner})        
+        if current_statement_exists:
+            current_statement = Item.objects.get(pk=self.pk).statement
+            if current_statement != self.statement:
+                StatementVersion.objects.get_or_create(statement=current_statement, defaults={"created_at" : self.updated_at, "parentItem": self,  "owner":self.owner})        
         
         return None
 

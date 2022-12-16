@@ -89,6 +89,7 @@ class Item(models.Model):
     actionable = models.BooleanField(default=False)
     done = models.BooleanField(default=False)
     statement = models.TextField(max_length=140)
+    statement_updated_at = models.DateTimeField(default=timezone.now)
     parentContainer = models.ForeignKey(Container, null=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -97,24 +98,23 @@ class Item(models.Model):
     completed_at = models.DateTimeField(null=True, default=None)
     tags = models.ManyToManyField(Tag)
 
-    def create_StatementVersion(self):
-        """creates a StatementVersion object with the statement the Item currently has (on db)"""
-        # if item doesn't exist, save() is being called for creating (and not updating) an Item object.
-        current_statement_exists = Item.objects.filter(pk=self.pk, owner=self.owner).exists()
-    
-        #if the Item object is being updated (instead of created)... AND the statement has been changed.
-        if current_statement_exists:
+    def save(self, *args, **kwargs):
+        """Creates StatementVersion object before saving"""
+        # If the Item object already exists in the database, check if the statement field has been changed.
+        if self.pk is not None:
             current_statement = Item.objects.get(pk=self.pk).statement
             if current_statement != self.statement:
-                StatementVersion.objects.get_or_create(statement=current_statement, defaults={"created_at" : self.updated_at, "parentItem": self,  "owner":self.owner})        
-        
-        return None
+                # If the statement field has been changed, create a StatementVersion object with the current statement and the statement_updated_at field as the value for the created_at field.
+                StatementVersion.objects.get_or_create(
+                    statement=current_statement, 
+                    defaults={"created_at": self.statement_updated_at, "parentItem": self, "owner": self.owner}
+                )
 
+                # Set the statement_updated_at field to the current time.
+                self.statement_updated_at = timezone.now()
 
-    def save(self, *args, **kwargs):
-        """creates StatementVersion objects before saving"""
-        self.create_StatementVersion()
         return super().save(*args, **kwargs)
+
 
     def __str__(self):
         return self.statement

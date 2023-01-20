@@ -62,7 +62,7 @@ def containerChangeTab(request, pk):
     tags = Tag.objects.all()
 
     # filtering the initial_queryset a little bit more.
-    initial_queryset = initial_queryset.exclude(done=True).order_by('created_at')
+    initial_queryset = initial_queryset.order_by('created_at')
     # generating the list of tuples where tuple = (tag_list, queryset).
     querysets = divide_querysets_by_tag_list([([], initial_queryset)], tags)
     # ignoring querysets that ended up empty (a queryset is empty if no item satisfied filters like having two tags at the same time).

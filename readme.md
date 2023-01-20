@@ -4,7 +4,7 @@ This is basically a CRUD application for separating user statements into actiona
 
 It replaced a manual system that I was (not) using for separating ideas and tasks on several areas that I refer to as 'systems' which I use to organize myself and make progress on.
 
-Inspired on todoist, GTD, and insight from many other resources.
+Inspired by todoist, GTD, and insight from many other software, people, media, and productivity methods.
 
 ## Built With
 - Django

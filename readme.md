@@ -7,8 +7,11 @@ It replaced a manual system that I was (not) using for separating ideas and task
 Inspired by todoist, GTD, and insight from many other software, people, media, and productivity methods.
 
 ## Built With
+[![Language](https://img.shields.io/github/languages/count/srd4/notebook_2.svg)](https://github.com/srd4/notebook_2)
 - Django
 - Python
+- Html
+- CSS
 
 ## Models
 - Container: Represents a container that holds items.
@@ -16,9 +19,10 @@ Inspired by todoist, GTD, and insight from many other software, people, media, a
 - Item: Represents an individual item that can be added to a container and tagged.
 - StatementVersion: Represents a version of the statement of an item.
 
+## Features
+
 The following is a list of features that Chat-gpt generated for me based on notebook app's database registry of completed tasks under my notebook 2.0 implementation and features containers (proofread by me):
 
-## Features
 - Create containers to hold actionable and non-actionable items.
 - Use tags to categorize items
 - Track when an item was last updated and how many times a container has been opened.
@@ -35,8 +39,4 @@ The following is a list of features that Chat-gpt generated for me based on note
 - User registration and login functionality.
 
 ## Placeholder for gif images
-
-- GIF 1:
-- GIF 2:
-- GIF 3:
 

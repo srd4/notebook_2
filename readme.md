@@ -6,18 +6,13 @@ It replaced a manual system that I was (not) using for separating ideas and task
 
 Inspired by todoist, GTD, and insight from many other software, people, media, and productivity methods.
 
-## Built With
-[![Language](https://img.shields.io/github/languages/count/srd4/notebook_2.svg)](https://github.com/srd4/notebook_2)
-- Django
-- Python
-- Html
-- CSS
-
 ## Models
 - Container: Represents a container that holds items.
 - Tag: Represents a tag that can be added to items.
 - Item: Represents an individual item that can be added to a container and tagged.
 - StatementVersion: Represents a version of the statement of an item.
+
+## GUI Demonstrations.
 
 ## Features
 
@@ -38,5 +33,9 @@ The following is a list of features that Chat-gpt generated for me based on note
 - A time of completion attribute for items.
 - User registration and login functionality.
 
-## Placeholder for gif images
-
+## Built With
+[![Language](https://img.shields.io/github/languages/count/srd4/notebook_2.svg)](https://github.com/srd4/notebook_2)
+- Django
+- Python
+- Html
+- CSS

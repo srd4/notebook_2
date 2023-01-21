@@ -12,19 +12,19 @@ Inspired by todoist, GTD, and insight from many other software, people, media, a
 - Item: Represents an individual item that can be added to a container and tagged.
 - StatementVersion: Represents a version of the statement of an item.
 
-## UI Demonstrations.
+# UI Demonstrations.
 
-### Creating new item in a container.
-![Alt Text](https://i.imgur.com/YcQKEOf.gif)
+## Creating new item in a container.
+![Alt Text 1](https://i.imgur.com/YcQKEOf.gif)
 
-### Changing an item's tags.
-![Alt Text](https://i.imgur.com/MNpahje.gif)
+## Changing an item's tags.
+![Alt Text 2](https://i.imgur.com/MNpahje.gif)
 
-### Using the search bar.
-![Alt Text](https://i.imgur.com/R1gKwM6.gif)
+## Using the search bar.
+![Alt Text 3](https://i.imgur.com/R1gKwM6.gif)
 
-### Marking elements as done.
-![Alt Text](https://i.imgur.com/z4TPLRw.gif)
+## Marking elements as done.
+![Alt Text 4](https://i.imgur.com/z4TPLRw.gif)
 
 ## Features
 

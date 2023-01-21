@@ -18,13 +18,13 @@ Inspired by todoist, GTD, and insight from many other software, people, media, a
 ![Alt Text 1](https://i.imgur.com/YcQKEOf.gif)
 
 ## Changing an item's tags.
-![Alt Text 2](https://i.imgur.com/MNpahje.gif)
+![Alt Text 2](https://i.imgur.com/FBE8d3t.gif)
 
 ## Using the search bar.
-![Alt Text 3](https://i.imgur.com/R1gKwM6.gif)
+![Alt Text 3](https://i.imgur.com/15o31eV.gif)
 
 ## Marking elements as done.
-![Alt Text 4](https://i.imgur.com/z4TPLRw.gif)
+![Alt Text 4](https://i.imgur.com/gQ15fuV.gif)
 
 ## Features
 

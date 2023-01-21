@@ -12,20 +12,6 @@ Inspired by todoist, GTD, and insight from many other software, people, media, a
 - Item: Represents an individual item that can be added to a container and tagged.
 - StatementVersion: Represents a version of the statement of an item.
 
-# UI Demonstrations.
-
-## Creating new item in a container.
-![Alt Text 1](https://i.imgur.com/YcQKEOf.gif)
-
-## Changing an item's tags.
-![Alt Text 2](https://i.imgur.com/FBE8d3t.gif)
-
-## Using the search bar.
-![Alt Text 3](https://i.imgur.com/15o31eV.gif)
-
-## Marking elements as done.
-![Alt Text 4](https://i.imgur.com/gQ15fuV.gif)
-
 ## Features
 
 The following is a list of features that Chat-gpt generated for me based on notebook app's database registry of completed tasks under my notebook 2.0 implementation and features containers (proofread by me):
@@ -44,6 +30,20 @@ The following is a list of features that Chat-gpt generated for me based on note
 - Saving changes in done attribute of an item to the database without reloading the page.
 - A time of completion attribute for items.
 - User registration and login functionality.
+
+## UI Demonstrations.
+
+### Creating new item in a container.
+![Alt Text 1](https://i.imgur.com/YcQKEOf.gif)
+
+### Changing an item's tags.
+![Alt Text 2](https://i.imgur.com/FBE8d3t.gif)
+
+### Using the search bar.
+![Alt Text 3](https://i.imgur.com/15o31eV.gif)
+
+### Marking elements as done.
+![Alt Text 4](https://i.imgur.com/gQ15fuV.gif)
 
 ## Built With
 [![Language](https://img.shields.io/github/languages/count/srd4/notebook_2.svg)](https://github.com/srd4/notebook_2)

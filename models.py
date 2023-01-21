@@ -74,7 +74,7 @@ class Container(models.Model):
         return i
 
 
-class Tag(models.Model):
+class ItemTag(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField(max_length=140)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -96,7 +96,7 @@ class Item(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     parentItem = models.ForeignKey('self', null=True, on_delete=models.SET_NULL)
     completed_at = models.DateTimeField(null=True, default=None)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(ItemTag)
 
     def save(self, *args, **kwargs):
         """Creates StatementVersion object before saving"""

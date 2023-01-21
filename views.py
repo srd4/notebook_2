@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 
-from .models import Container, Item, Tag
+from .models import Container, Item, ItemTag
 from .forms import ContainerForm
 
 LoginRequiredMixin.login_url = reverse_lazy('notebook_2:login')
@@ -59,7 +59,7 @@ def containerChangeTab(request, pk):
     # tags = [Tag.objects.get(pk=i) for i in request.GET.getlist('tag')]
 
     # selecting all Tag instances:
-    tags = Tag.objects.all()
+    tags = ItemTag.objects.all()
 
     # filtering the initial_queryset a little bit more.
     initial_queryset = initial_queryset.exclude(done=True).order_by('created_at')
@@ -86,7 +86,7 @@ def containerCollapse(request, pk):
 
 class loginView(LoginView):
     template_name = "notebook_2/login.html"
-    success_url = reverse_lazy('notebook_2:containers')
+    next_page = reverse_lazy('notebook_2:containers')
     redirect_authenticated_user = True
 
 
@@ -317,7 +317,7 @@ class itemUpdateView(LoginRequiredMixin, UpdateView):
         f.fields['parentItem'].queryset = Item.objects.filter(owner=self.request.user)
 
         f.fields['tags'].required = False
-        f.fields['tags'].queryset = Tag.objects.filter(owner=self.request.user)
+        f.fields['tags'].queryset = ItemTag.objects.filter(owner=self.request.user)
 
         return f
 

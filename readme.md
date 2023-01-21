@@ -17,15 +17,6 @@ Inspired by todoist, GTD, and insight from many other software, people, media, a
 ## Changing an item's tags.
 ![Alt Text 2](https://i.imgur.com/MNpahje.gif)
 
-## Creating new item in a container.
-![Alt Text 1](https://i.imgur.com/YcQKEOf.gif)
-
-## Using the search bar.
-![Alt Text 3](https://i.imgur.com/R1gKwM6.gif)
-
-## Marking elements as done.
-![Alt Text 4](https://i.imgur.com/z4TPLRw.gif)
-
 ## Features
 
 The following is a list of features that Chat-gpt generated for me based on notebook app's database registry of completed tasks under my notebook 2.0 implementation and features containers (proofread by me):
